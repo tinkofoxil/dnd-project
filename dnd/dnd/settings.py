@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'users.apps.UsersConfig',
     'dnd_profile.apps.DndProfileConfig',
+    'rest_framework',
 ]
 
 MIDDLEWARE = [

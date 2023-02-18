@@ -1,6 +1,9 @@
-from django.shortcuts import render
-from django.http import HttpResponse
+from rest_framework import generics
+
+from .models import Profile
+from .serializer import ProfileSerializer
 
 
-def index(request):
-    return HttpResponse("Hello, world. You're at the polls index.")
+class ProfileAPIView(generics.ListAPIView):
+    queryset = Profile.objects.all()
+    serializer_class = ProfileSerializer

@@ -3,5 +3,5 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
-    path('', views.index, name='index'),
+    path('api/v1/profile_list/', views.ProfileAPIView.as_view()),
 ]

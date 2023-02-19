@@ -9,3 +9,8 @@ from .serializer import ProfileSerializer
 class ProfileAPIList(generics.ListCreateAPIView):
     queryset = Profile.objects.all()
     serializer_class = ProfileSerializer
+
+
+class ProfileAPIUpdate(generics.UpdateAPIView):
+    queryset = Profile.objects.all()
+    serializer_class = ProfileSerializer

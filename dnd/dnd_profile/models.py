@@ -1,4 +1,8 @@
 from django.db import models
+from django.contrib.auth import get_user_model
+
+
+User = get_user_model()
 
 
 class Profile(models.Model):
@@ -14,4 +18,9 @@ class Profile(models.Model):
     image = models.ImageField(
         verbose_name='Картинка',
         help_text='Добавьте картинку'
+    )
+    user = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        verbose_name='Пользователь',
     )

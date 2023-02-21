@@ -5,13 +5,10 @@ from rest_framework import mixins
 
 from .models import Profile
 from .serializer import ProfileSerializer
+from .permissions import IsOwnerOrReadOnly
 
 
-class ProfileViewSet(mixins.CreateModelMixin,
-                     mixins.RetrieveModelMixin,
-                     mixins.UpdateModelMixin,
-                     mixins.DestroyModelMixin,
-                     mixins.ListModelMixin,
-                     viewsets.GenericViewSet):
+class ProfileViewSet(viewsets.ModelViewSet):
     queryset = Profile.objects.all()
     serializer_class = ProfileSerializer
+    permission_classes = (IsOwnerOrReadOnly,)

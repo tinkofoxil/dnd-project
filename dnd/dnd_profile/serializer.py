@@ -14,20 +14,18 @@ class ProfileSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Profile
-        fields = ("pk", "name", "age", "image",)
+        fields = ("pk", "name", "age", "gender", "image",)
 
     def validate_age(self, age):
-        if type(age) is not int:
-            raise serializers.ValidationError(
-                'Возраст должен быть целочисленным'
-            )
-        elif age <= 0:
+        if age <= 0:
             raise serializers.ValidationError(
                 'Возраст должен быть больше нуля'
             )
+        return age
 
     def validate_user(self, user):
         if user.is_anonymous:
             raise serializers.ValidationError(
                     'Юзер не может быть анонимным'
                 )
+        return user

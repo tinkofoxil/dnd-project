@@ -1,11 +1,22 @@
-from django.db import models
 from django.contrib.auth import get_user_model
-
+from django.db import models
 
 User = get_user_model()
 
+Genders = [
+    ('W', 'Woman'),
+    ('M', 'Man'),
+    ('N', 'None')
+]
+
+
+class DndGame(models.Model):
+    pass
+
 
 class Profile(models.Model):
+    """Модель профиля/анкеты игрока."""
+
     name = models.TextField(
         max_length=64,
         verbose_name='Имя',
@@ -20,6 +31,11 @@ class Profile(models.Model):
         help_text='Добавьте картинку',
         blank=False,
         null=True,
+    )
+    gender = models.CharField(
+        choices=Genders,
+        max_length=1,
+        default='N'
     )
     pub_date = models.DateTimeField(
         auto_now_add=True,

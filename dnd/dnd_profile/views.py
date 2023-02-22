@@ -9,6 +9,8 @@ from .permissions import IsOwnerOrReadOnly
 
 
 class ProfileViewSet(viewsets.ModelViewSet):
+    """Вьюсет для профиля/анкеты."""
+
     queryset = Profile.objects.all()
     serializer_class = ProfileSerializer
     permission_classes = (IsOwnerOrReadOnly,)

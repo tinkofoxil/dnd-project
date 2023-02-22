@@ -10,8 +10,20 @@ class UserSerializer(serializers.ModelSerializer):
 
 
 class ProfileSerializer(serializers.ModelSerializer):
-    user = UserSerializer(read_only=True)
+    user = UserSerializer
 
     class Meta:
         model = Profile
-        fields = ("pk", "name", "age", "image", "user")
+        fields = ("pk", "name", "age", "image",)
+
+    def validate_user(self, user):
+        if user.is_anonymous:
+            raise serializers.ValidationError(
+                    'Юзер не может быть анонимным'
+                )
+
+
+class ProfileShortSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Profile
+        fields = ("pk", "name", "age", "image")

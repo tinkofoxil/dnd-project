@@ -17,7 +17,9 @@ class Profile(models.Model):
     )
     image = models.ImageField(
         verbose_name='Картинка',
-        help_text='Добавьте картинку'
+        help_text='Добавьте картинку',
+        blank=False,
+        null=True,
     )
     pub_date = models.DateTimeField(
         auto_now_add=True,

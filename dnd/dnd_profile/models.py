@@ -37,10 +37,18 @@ class Profile(models.Model):
         max_length=1,
         default='N'
     )
-    pub_date = models.DateTimeField(
-        auto_now_add=True,
-        verbose_name="Дата публикации",
-    )
+    race = models.CharField(max_length=50)
+    class_name = models.CharField(max_length=50)
+    level = models.IntegerField()
+    strength = models.IntegerField()
+    dexterity = models.IntegerField()
+    constitution = models.IntegerField()
+    intelligence = models.IntegerField()
+    wisdom = models.IntegerField()
+    charisma = models.IntegerField()
+    description = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
     user = models.ForeignKey(
         User,
         on_delete=models.CASCADE,

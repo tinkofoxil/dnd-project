@@ -11,7 +11,7 @@ const Header = () => {
           <li className="header__item"><Link className="header__link" to="/">Профили</Link></li>
           <li className="header__item"><Link className="header__link" to="/">О проекте</Link></li>
           <li className="header__item"><Link className="header__link" to="/">Регистрация</Link></li>
-          <li className="header__item"><Link className="header__link" to="/">Логин</Link></li>
+          <li className="header__item"><Link className="header__link" to="/">Войти</Link></li>
         </ul>
       </nav>
     </header>

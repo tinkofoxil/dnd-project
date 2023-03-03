@@ -14,7 +14,11 @@ class ProfileSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Profile
-        fields = ("pk", "name", "age", "gender", "image",)
+        fields = (
+            "pk", "name", "age",
+            "gender", "image", "race",
+            "class_name", "level",
+        )
 
     def validate_age(self, age):
         if age <= 0:

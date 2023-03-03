@@ -1,0 +1,16 @@
+.footer {
+    background-color: #222;
+  }
+  
+  .footer-wrapper {
+    padding: 5rem;
+    margin: 0 auto;
+    clear: both;
+    text-align: center;
+  }
+  
+  .footer-text {
+    font-size: 1rem;
+    color: #fff;
+  }
+  

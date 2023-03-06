@@ -17,7 +17,10 @@ class ProfileSerializer(serializers.ModelSerializer):
         fields = (
             "pk", "name", "age",
             "gender", "image", "race",
-            "class_name", "level",
+            "class_name", "level", "charisma",
+            "description", "strength", "dexterity",
+            "constitution", "intelligence", "wisdom"
+
         )
 
     def validate_age(self, age):
@@ -26,7 +29,7 @@ class ProfileSerializer(serializers.ModelSerializer):
                 'Возраст должен быть больше нуля'
             )
         return age
-    
+   
     def validate_level(self, level):
         if level < 0:
             raise serializers.ValidationError(

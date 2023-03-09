@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import "../../css/register.css";
 
 function Registration() {
     const [username, setUsername] = useState('');
@@ -29,12 +30,21 @@ function Registration() {
     };
   
     return (
-      <form onSubmit={handleSubmit}>
-        <input type="text" value={username} onChange={(e) => setUsername(e.target.value)} />
-        <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
-        <button type="submit">Register</button>
-        {error && <p>{error}</p>}
-      </form>
+        <div className="registration-form-container">
+            <form onSubmit={handleSubmit}>
+                <h2>Регистрация</h2>
+                <div className="form-group">
+                    <label htmlFor="name">Имя</label>
+                    <input type="text" value={username} onChange={(e) => setUsername(e.target.value)} />
+                </div>
+                <div className="form-group">
+                    <label htmlFor="password">Пароль</label>
+                    <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
+                </div>
+                <button type="submit">Зарегаца</button>
+                {error && <p>{error}</p>}
+            </form>
+        </div>
     );
   }
 

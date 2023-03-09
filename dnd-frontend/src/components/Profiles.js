@@ -12,6 +12,7 @@ function Profiles() {
 
     useEffect(() => {
         fetchData();
+        console.log("Ты в useeffect")
     }, []);
     
     const fetchData = async () => {
@@ -26,7 +27,6 @@ function Profiles() {
 
     function handlePaginationClick(newOffset) {
         setOffset(newOffset);
-        console.log(newOffset)
         fetchData();
     }
 

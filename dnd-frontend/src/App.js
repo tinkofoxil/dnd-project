@@ -5,6 +5,7 @@ import Profiles from './components/Profiles';
 import About from './components/About';
 import Main from './components/Main';
 import Register from './components/users/Register';
+import Login from './components/users/Login';
 import { Route, Routes } from 'react-router-dom';
 
 function App() {
@@ -17,6 +18,7 @@ function App() {
           <Route path="/profiles" element={<Profiles />}/>
           <Route path="/about" element={<About />}/>
           <Route path="/register" element={<Register />}/>
+          <Route path="/login" element={<Login />}/>
         </Routes>
       </div>
       <Footer />

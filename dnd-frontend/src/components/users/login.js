@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 function Login() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
-  const history = useHistory();
+  const history = useNavigate();
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -29,48 +29,22 @@ function Login() {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <input type="text" value={username} onChange={(e) => setUsername(e.target.value)} />
-      <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
-      <button type="submit">Login</button>
-      {error && <p>{error}</p>}
-    </form>
+    <div className="registration-form-container">
+      <form onSubmit={handleSubmit}>
+        <h2>Войти</h2>
+        <div className="form-group">
+          <label htmlFor="name">Имя</label>
+          <input type="text" value={username} onChange={(e) => setUsername(e.target.value)} />
+        </div>
+        <div className="form-group">
+          <label htmlFor="name">Пароль</label>
+          <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
+        </div>
+        <button type="submit">Войти</button>
+        {error && <p>{error}</p>}
+      </form>
+    </div>
   );
 }
 
-function Register() {
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
-  const history = useHistory();
-
-  const handleSubmit = async (event) => {
-    event.preventDefault();
-    const response = await fetch('http://127.0.0.1:8000/api/v1/auth/users/', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        username: username,
-        password: password
-      })
-    });
-    const data = await response.json();
-    if (response.ok) {
-      localStorage.setItem('token', data.token);
-      history.push('/');
-    } else {
-      setError(data.message);
-    }
-  };
-
-  return (
-    <form onSubmit={handleSubmit}>
-      <input type="text" value={username} onChange={(e) => setUsername(e.target.value)} />
-      <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
-      <button type="submit">Register</button>
-      {error && <p>{error}</p>}
-    </form>
-  );
-}
+export default Login;

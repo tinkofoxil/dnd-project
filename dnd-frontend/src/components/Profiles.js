@@ -48,6 +48,7 @@ function Profiles() {
                             <li>Age: {item.age}</li>  
                             <li>Race: {item.race}</li>
                             <li>Class: {item.class_name}</li>
+                            <li>Strength: {item.strength}</li>
                             <li>Level: {item.level}</li>
                         </ul>
                     </div>

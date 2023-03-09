@@ -6,7 +6,9 @@ const Header = () => {
   return (
     <>
       <header className="header">
-        <div className="header__logo">DND :)</div>
+        <div className="header__logo">
+          <Link className="header__link" to="/">DND :)</Link>
+        </div>
         <nav className="header__nav">
           <ul className="header__list">
             <li className="header__item"><Link className="header__link" to="/profiles">Профили</Link></li>

@@ -22,7 +22,7 @@ function Login() {
     const data = await response.json();
     if (response.ok) {
       localStorage.setItem('token', data.token);
-      history.push('/');
+      history('/');
     } else {
       setError(data.message);
     }

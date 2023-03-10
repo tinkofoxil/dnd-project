@@ -29,7 +29,7 @@ class ProfileSerializer(serializers.ModelSerializer):
                 'Возраст должен быть больше нуля'
             )
         return age
-   
+
     def validate_level(self, level):
         if level < 0:
             raise serializers.ValidationError(

@@ -47,7 +47,10 @@ class Profile(models.Model):
     wisdom = models.IntegerField()
     charisma = models.IntegerField()
     description = models.TextField()
-    created_at = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField(
+        auto_now_add=True,
+        verbose_name='Дата создания',
+    )
     updated_at = models.DateTimeField(auto_now=True)
     user = models.ForeignKey(
         User,

@@ -31,7 +31,7 @@ const Header = () => {
             <li className="header__item"><Link className="header__link" to="/profiles">Профили</Link></li>
             {isAuthenticated ? (
               <>
-              <li className="header__item"><Link className="header__link" to="/">Создать персонажа</Link></li>
+              <li className="header__item"><Link className="header__link" to="/profile_create">Создать персонажа</Link></li>
               <li className="header__item"><Link className="header__link" to="/about">О проекте</Link></li>
               <li className="header__item"><Link className="header__link" to="/account">Аккаунт</Link></li>
               </>

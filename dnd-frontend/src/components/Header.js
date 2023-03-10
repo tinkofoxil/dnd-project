@@ -1,8 +1,24 @@
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import { Link } from 'react-router-dom';
+import jwtDecode from 'jwt-decode';
 import '../css/header.css';
 
 const Header = () => {
+
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+  useEffect(() => {
+    const token = localStorage.getItem('access');
+    if (token) {
+      const decodedToken = jwtDecode(token);
+      if (decodedToken.exp * 1000 < Date.now()) {
+        localStorage.removeItem('access');
+      } else {
+        setIsAuthenticated(true);
+      }
+    }
+  }, []);
+
   return (
     <>
       <header className="header">
@@ -12,9 +28,19 @@ const Header = () => {
         <nav className="header__nav">
           <ul className="header__list">
             <li className="header__item"><Link className="header__link" to="/profiles">Профили</Link></li>
-            <li className="header__item"><Link className="header__link" to="/about">О проекте</Link></li>
-            <li className="header__item"><Link className="header__link" to="/register">Регистрация</Link></li>
-            <li className="header__item"><Link className="header__link" to="/login">Войти</Link></li>
+            {isAuthenticated ? (
+              <>
+              <li className="header__item"><Link className="header__link" to="/about">Создать персонажа</Link></li>
+              <li className="header__item"><Link className="header__link" to="/about">О проекте</Link></li>
+              <li className="header__item"><Link className="header__link" to="/login">Аккаунт</Link></li>
+              </>
+            ) : (
+              <>
+              <li className="header__item"><Link className="header__link" to="/about">О проекте</Link></li>
+              <li className="header__item"><Link className="header__link" to="/login">Войти</Link></li>
+              <li className="header__item"><Link className="header__link" to="/register">Регистрация</Link></li>
+              </>
+            )}
           </ul>
         </nav>
       </header>

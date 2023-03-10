@@ -21,10 +21,12 @@ function Login() {
     });
     const data = await response.json();
     if (response.ok) {
-      localStorage.setItem('token', data.token);
+      localStorage.setItem('refresh', data.refresh);
+      localStorage.setItem('access', data.access);
       history('/');
     } else {
-      setError(data.message);
+      if (data.username) { setError(data.username);}
+      if (data.password) { setError(data.password);}
     }
   };
 

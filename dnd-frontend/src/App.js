@@ -7,6 +7,7 @@ import Main from './components/Main';
 import Register from './components/users/Register';
 import Login from './components/users/Login';
 import { Route, Routes } from 'react-router-dom';
+import RegistrationSuccess from './components/users/RegistrationSuccess';
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
           <Route path="/profiles" element={<Profiles />}/>
           <Route path="/about" element={<About />}/>
           <Route path="/register" element={<Register />}/>
+          <Route path="/register/success" element={<RegistrationSuccess />}/>
           <Route path="/login" element={<Login />}/>
         </Routes>
       </div>

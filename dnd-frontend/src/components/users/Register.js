@@ -23,9 +23,10 @@ function Registration() {
       const data = await response.json();
       if (response.ok) {
         localStorage.setItem('token', data.token);
-        history('/');
+        history('/register/success');
       } else {
-        setError(data.message);
+        if (data.username) { setError(data.username);}
+        if (data.password) { setError(data.password);}
       }
     };
   

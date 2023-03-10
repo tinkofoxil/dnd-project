@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
+import axios from 'axios';
 import '../css/profiles.css'
 import '../css/pagination.css'
 
-function Profiles() {
+const Profiles = () => {
     const [data, setData] = useState([]);
     const [offset, setOffset] = useState(0);
     const limit = 5;
@@ -11,23 +12,21 @@ function Profiles() {
     const [count, setCount] = useState(0)
 
     useEffect(() => {
+        const fetchData = async () => {
+            const response = await axios.get(`http://127.0.0.1:8000/api/v1/profile/?limit=${limit}&offset=${offset}`);
+            console.log("Ты в фетч дата")
+            setNext(response.data.next);
+            setPrevious(response.data.previous);
+            setData(response.data);
+            setCount(response.data.count);
+        };
         fetchData();
         console.log("Ты в useeffect")
-    }, []);
-    
-    const fetchData = async () => {
-        const response = await fetch(`http://127.0.0.1:8000/api/v1/profile/?limit=${limit}&offset=${offset}`);
-        const data = await response.json();
-        console.log(data)
-        setNext(data.next);
-        setPrevious(data.previous);
-        setData(data)
-        setCount(data.count)
-    };
+    }, [offset]);
 
     function handlePaginationClick(newOffset) {
+        console.log("Ты в хандле")
         setOffset(newOffset);
-        fetchData();
     }
 
     const pages = Math.ceil(count / limit);

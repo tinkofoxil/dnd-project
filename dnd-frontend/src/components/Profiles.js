@@ -14,18 +14,15 @@ const Profiles = () => {
     useEffect(() => {
         const fetchData = async () => {
             const response = await axios.get(`http://127.0.0.1:8000/api/v1/profile/?limit=${limit}&offset=${offset}`);
-            console.log("Ты в фетч дата")
             setNext(response.data.next);
             setPrevious(response.data.previous);
             setData(response.data);
             setCount(response.data.count);
         };
         fetchData();
-        console.log("Ты в useeffect")
     }, [offset]);
 
     function handlePaginationClick(newOffset) {
-        console.log("Ты в хандле")
         setOffset(newOffset);
     }
 

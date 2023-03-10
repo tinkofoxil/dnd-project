@@ -11,6 +11,7 @@ const Header = () => {
     const token = localStorage.getItem('access');
     if (token) {
       const decodedToken = jwtDecode(token);
+      console.log(decodedToken)
       if (decodedToken.exp * 1000 < Date.now()) {
         localStorage.removeItem('access');
       } else {
@@ -30,9 +31,9 @@ const Header = () => {
             <li className="header__item"><Link className="header__link" to="/profiles">Профили</Link></li>
             {isAuthenticated ? (
               <>
-              <li className="header__item"><Link className="header__link" to="/about">Создать персонажа</Link></li>
+              <li className="header__item"><Link className="header__link" to="/">Создать персонажа</Link></li>
               <li className="header__item"><Link className="header__link" to="/about">О проекте</Link></li>
-              <li className="header__item"><Link className="header__link" to="/login">Аккаунт</Link></li>
+              <li className="header__item"><Link className="header__link" to="/account">Аккаунт</Link></li>
               </>
             ) : (
               <>

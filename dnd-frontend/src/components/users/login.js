@@ -24,9 +24,11 @@ function Login() {
       localStorage.setItem('refresh', data.refresh);
       localStorage.setItem('access', data.access);
       history('/');
+      window.location.reload();
     } else {
       if (data.username) { setError(data.username);}
       if (data.password) { setError(data.password);}
+      if (data.detail) { setError(data.detail);}
     }
   };
 

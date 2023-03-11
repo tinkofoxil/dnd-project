@@ -2,6 +2,7 @@ import logo from './logo.svg';
 import Header from './components/Header';
 import Footer from './components/Footer';
 import Profiles from './components/Profiles';
+import Profile from './components/Profile';
 import About from './components/About';
 import Main from './components/Main';
 import Register from './components/users/Register';
@@ -20,6 +21,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Main />}/>
           <Route path="/profiles" element={<Profiles />}/>
+          <Route path="/profiles/:id" element={<Profile />}/>
           <Route path="/profile_create" element={<ProfileCreate />}/>
           <Route path="/about" element={<About />}/>
           <Route path="/register" element={<Register />}/>

@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import axios from 'axios';
 import '../css/profiles.css'
 import '../css/pagination.css'
@@ -46,7 +47,8 @@ const Profiles = () => {
                             <li>Class: {item.class_name}</li>
                             <li>Strength: {item.strength}</li>
                             <li>Level: {item.level}</li>
-                        </ul>
+                            <li><Link to={`/profiles/${item.pk}`}>Больше инфы</Link></li>
+                        </ul> 
                     </div>
                 </div>
             </div>

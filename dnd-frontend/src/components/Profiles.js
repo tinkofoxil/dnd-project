@@ -40,14 +40,13 @@ const Profiles = () => {
                 </div>
                 <div className="profile-body">
                     <div className="profile-section">
-                        <h2>Basic Info</h2>
+                        <h2>Краткая инфа</h2>
                         <ul>
-                            <li>Age: {item.age}</li>  
-                            <li>Race: {item.race}</li>
-                            <li>Class: {item.class_name}</li>
-                            <li>Strength: {item.strength}</li>
-                            <li>Level: {item.level}</li>
-                            <li><Link to={`/profiles/${item.pk}`}>Больше инфы</Link></li>
+                            <li>Возраст: {item.age}</li>  
+                            <li>Раса: {item.race}</li>
+                            <li>Класс: {item.class_name}</li>
+                            <li>Уровень: {item.level}</li>
+                            <li><Link className='profile-link' to={`/profiles/${item.pk}`}>Больше инфы</Link></li>
                         </ul> 
                     </div>
                 </div>

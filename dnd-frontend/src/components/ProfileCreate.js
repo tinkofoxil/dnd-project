@@ -17,14 +17,15 @@ const ProfileCreate = () => {
     const [constitution, setConstitution] = useState("");
     const [intelligence, setIntelligence] = useState("");
     const [wisdom, setWisdom] = useState("");
-  
+
     const handleSubmit = async (e) => {
       e.preventDefault();
-      const token = localStorage.getItem("access"); // получение токена из локального хранилища
+      const token = localStorage.getItem("access");
+       // получение токена из локального хранилища
       try {
         const response = await axios.post(
           "http://127.0.0.1:8000/api/v1/profile/",
-          { name, image, age, gender, race, class_name, level, charisma, description, strength, dexterity, constitution, intelligence, wisdom},
+          { name, image, age, gender, race, class_name, level, charisma, description, strength, dexterity, constitution, intelligence, wisdom },
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -32,7 +33,6 @@ const ProfileCreate = () => {
             },
           }
         );
-        console.log(response.data);
         setName("");
         setImage("");
         setAge("");

@@ -42,7 +42,7 @@ function Login() {
         </div>
         <div className="form-group">
           <label htmlFor="name">Пароль</label>
-          <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
+          <input type="password" autoComplete="on" value={password} onChange={(e) => setPassword(e.target.value)} />
         </div>
         <button type="submit">Войти</button>
         {error && <p>{error}</p>}

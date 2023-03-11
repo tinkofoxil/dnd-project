@@ -1,18 +1,17 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+
 
 const Profile = () => {
     const [profile, setProfile] = useState(null);
     const { id } = useParams();
-    const [isStatsVisible, setIsStatsVisible] = useState(false);
 
     useEffect(() => {
         fetch(`http://127.0.0.1:8000/api/v1/profile/${id}`)
         .then((res) => res.json())
         .then((data) => setProfile(data))
         .catch((error) => console.error(error));
-    }, []);
+    }, [id]);
 
     if (!profile) {
         return <div>Loading...</div>;

@@ -10,7 +10,7 @@ class UserSerializer(serializers.ModelSerializer):
 
 
 class ProfileSerializer(serializers.ModelSerializer):
-    user = UserSerializer
+    user = serializers.SlugRelatedField(slug_field="username", read_only=True)
 
     class Meta:
         model = Profile
@@ -19,7 +19,8 @@ class ProfileSerializer(serializers.ModelSerializer):
             "gender", "image", "race",
             "class_name", "level", "charisma",
             "description", "strength", "dexterity",
-            "constitution", "intelligence", "wisdom"
+            "constitution", "intelligence", "wisdom",
+            "user"
 
         )
 
@@ -36,10 +37,3 @@ class ProfileSerializer(serializers.ModelSerializer):
                 'Уровень не может быть отрицательным'
             )
         return level
-
-    def validate_user(self, user):
-        if user.is_anonymous:
-            raise serializers.ValidationError(
-                    'Юзер не может быть анонимным'
-                )
-        return user

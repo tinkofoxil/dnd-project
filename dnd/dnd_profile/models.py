@@ -17,7 +17,7 @@ class DndGame(models.Model):
 class Profile(models.Model):
     """Модель профиля/анкеты игрока."""
 
-    name = models.TextField(
+    name = models.CharField(
         max_length=64,
         verbose_name='Имя',
         help_text='Добавьте имя'
@@ -56,8 +56,12 @@ class Profile(models.Model):
         User,
         on_delete=models.CASCADE,
         verbose_name='Пользователь',
+        related_name='profiles',
     )
 
     class Meta:
         verbose_name = 'Профиль'
         verbose_name_plural = 'Профили'
+
+    def __str__(self):
+        return self.name

@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'corsheaders',
     'users.apps.UsersConfig',
     'dnd_profile.apps.DndProfileConfig',
+    'api.apps.ApiConfig',
     'rest_framework',
     'rest_framework_simplejwt',
 ]

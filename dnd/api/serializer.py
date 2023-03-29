@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from .models import Profile, User
+from dnd_profile.models import Profile, User
 
 
 class UserSerializer(serializers.ModelSerializer):

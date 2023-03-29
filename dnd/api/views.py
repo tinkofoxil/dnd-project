@@ -3,7 +3,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import mixins
 
-from .models import Profile
+from dnd_profile.models import Profile
 from .serializer import ProfileSerializer
 from .permissions import IsOwnerOrReadOnly
 

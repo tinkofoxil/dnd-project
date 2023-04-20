@@ -1,6 +1,7 @@
 from rest_framework import serializers
 
 from dnd_profile.models import Profile, User
+from game.models import Game
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -37,3 +38,14 @@ class ProfileSerializer(serializers.ModelSerializer):
                 'Уровень не может быть отрицательным'
             )
         return level
+
+
+class GameSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Game
+        fields = (
+            'id',
+            'name',
+            'character'
+        )

@@ -8,6 +8,7 @@ from . import views
 
 router = routers.SimpleRouter()
 router.register(r'profile', views.ProfileViewSet)
+router.register(r'game', views.GameViewSet)
 
 urlpatterns = [
     path('api/v1/', include(router.urls)),

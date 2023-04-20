@@ -1,6 +1,8 @@
 from django.contrib.auth.models import User
 from django.db import models
 
+from dnd_profile.models import Profile
+
 
 class Game(models.Model):
     name = models.CharField(
@@ -8,8 +10,9 @@ class Game(models.Model):
         verbose_name='Игра',
         help_text='Создайте игру',
     )
-    users = models.ManyToManyField(
-        User,
+    character = models.ManyToManyField(
+        Profile,
+        verbose_name='Персонаж',
         related_name='games',
     )
 

@@ -4,7 +4,8 @@ from rest_framework.response import Response
 from rest_framework import mixins
 
 from dnd_profile.models import Profile
-from .serializer import ProfileSerializer
+from game.models import Game
+from .serializer import ProfileSerializer, GameSerializer
 from .permissions import IsOwnerOrReadOnly
 
 
@@ -17,3 +18,9 @@ class ProfileViewSet(viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
+
+
+class GameViewSet(viewsets.ModelViewSet):
+
+    queryset = Game.objects.all()
+    serializer_class = GameSerializer

@@ -4,8 +4,7 @@ from .models import Game
 
 
 class GameAdmin(admin.ModelAdmin):
-    fields = ['name', 'users']
-    filter_horizontal = ('users',)
+    fields = ['name', 'character']
 
 
 admin.site.register(Game, GameAdmin)

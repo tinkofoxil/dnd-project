@@ -22,7 +22,7 @@ const ProfileCreate = () => {
 
     const handleSubmit = async (e) => {
       e.preventDefault();
-      const token = localStorage.getItem("access");
+      const token = localStorage.getItem("git ");
        // получение токена из локального хранилища
       try {
         const response = await axios.post(

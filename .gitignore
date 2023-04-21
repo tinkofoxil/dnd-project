@@ -149,3 +149,18 @@ dmypy.json
 media/
 db_loader/
 
+
+#React
+
+# Build artifacts
+/build
+/dist
+
+# Dependencies
+/.pnp
+.pnp.js
+
+# Other
+.npmrc
+yarn.lock
+

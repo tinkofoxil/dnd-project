@@ -1,5 +1,6 @@
 import axios from 'axios';
 import React, { useState } from "react";
+import { useNavigate } from 'react-router-dom';
 import "../css/profileCreate.css"
 
 const ProfileCreate = () => {
@@ -17,6 +18,7 @@ const ProfileCreate = () => {
     const [constitution, setConstitution] = useState("");
     const [intelligence, setIntelligence] = useState("");
     const [wisdom, setWisdom] = useState("");
+    const history = useNavigate();
 
     const handleSubmit = async (e) => {
       e.preventDefault();
@@ -47,6 +49,9 @@ const ProfileCreate = () => {
         setConstitution("");
         setIntelligence("");
         setWisdom("");
+        if (response.ok) {
+          history('/');
+        }
       } catch (error) {
         console.error(error);
       }

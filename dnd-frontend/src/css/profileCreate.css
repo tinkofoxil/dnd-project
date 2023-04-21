@@ -16,10 +16,12 @@
   }
   
   input,
-  textarea,
-  select {
+  select,
+  textarea {
     padding: 0.5rem;
     margin-bottom: 1rem;
     border-radius: 0.25rem;
     border: 1px solid #ccc;
+    width: 350px;
+    font-size: 1.2rem;
   }

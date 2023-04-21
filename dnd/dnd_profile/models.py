@@ -10,10 +10,6 @@ Genders = [
 ]
 
 
-class DndGame(models.Model):
-    pass
-
-
 class Profile(models.Model):
     """Модель профиля/анкеты игрока."""
 

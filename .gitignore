@@ -152,6 +152,8 @@ db_loader/
 
 #React
 
+node_modules/
+
 # Build artifacts
 /build
 /dist
@@ -163,4 +165,3 @@ db_loader/
 # Other
 .npmrc
 yarn.lock
-

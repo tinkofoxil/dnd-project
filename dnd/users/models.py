@@ -1,6 +1,6 @@
 from django.db import models
 
-from ..dnd_profile.models import User
+from dnd_profile.models import User
 
 
 class Friendship(models.Model):

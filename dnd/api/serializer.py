@@ -2,12 +2,31 @@ from rest_framework import serializers
 
 from dnd_profile.models import Profile, User
 from game.models import Game
+from users.models import Friendship
 
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = "__all__"
+
+
+class FriendshipSerializer(serializers.ModelSerializer):
+    user = UserSerializer(read_only=True)
+    friend = UserSerializer(read_only=True)
+
+    class Meta:
+        model = Friendship
+        fields = ('pk', 'user', 'friend')
+
+    def validate(self, data):
+        request_user = self.context['request'].user
+        friend_user = data['friend']
+        if request_user == friend_user:
+            raise serializers.ValidationError(
+                "Нельзя добавить в друзья самого себя."
+            )
+        return data
 
 
 class ProfileSerializer(serializers.ModelSerializer):

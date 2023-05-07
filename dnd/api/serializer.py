@@ -8,7 +8,7 @@ from users.models import Friendship
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = "__all__"
+        fields = ('pk', 'username')
 
 
 class FriendshipSerializer(serializers.ModelSerializer):
@@ -20,11 +20,11 @@ class FriendshipSerializer(serializers.ModelSerializer):
         fields = ('pk', 'user', 'friend')
 
     def validate(self, data):
-        request_user = self.context['request'].user
-        friend_user = data['friend']
-        if request_user == friend_user:
+        user = self.context['request'].user
+        friend = data['friend']
+        if user == friend:
             raise serializers.ValidationError(
-                "Нельзя добавить в друзья самого себя."
+                'Нельзя добавить самого себя в друзья.'
             )
         return data
 

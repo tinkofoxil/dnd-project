@@ -5,7 +5,8 @@ const LogoutButton = () => {
   const history = useNavigate();
 
   const Logout = () => {
-    localStorage.removeItem('access'); // удалить токен из localStorage
+    localStorage.removeItem('access');
+    localStorage.removeItem('user_id'); // удалить токен из localStorage
     history('/'); // перенаправить пользователя на страницу входа
     window.location.reload();
   };

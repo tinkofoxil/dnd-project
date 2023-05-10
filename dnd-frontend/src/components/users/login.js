@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
 function Login() {
@@ -23,6 +24,10 @@ function Login() {
     if (response.ok) {
       localStorage.setItem('refresh', data.refresh);
       localStorage.setItem('access', data.access);
+      const result = await axios.get('http://127.0.0.1:8000/api/v1/auth/users/me', {
+        headers: { Authorization: `Bearer ${localStorage.getItem('access')}` }
+      });
+      localStorage.setItem('user_id', result.data.id)
       history('/');
       window.location.reload();
     } else {

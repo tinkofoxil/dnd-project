@@ -7,6 +7,7 @@ const Profile = () => {
     const [profile, setProfile] = useState(null);
     const { id } = useParams();
     const [isProfileDeleted, setIsProfileDeleted] = useState(false);
+    const userId = localStorage.getItem('user_id');
     const history = useNavigate();
 
     useEffect(() => {
@@ -56,7 +57,7 @@ const Profile = () => {
                 <ul>
                     <li>Описание: {profile.description}</li>
                     <li><Link className='profile-link' to={`/account/${profile.user_id}`}>Автор: {profile.user}</Link></li>
-                    <li><button onClick={handleDeleteProfile}>Удалить профиль</button></li>
+                    {profile.user_id === parseInt(userId) && <li><button onClick={handleDeleteProfile}>Удалить профиль</button></li>}
                 </ul> 
             </div>
         </div>

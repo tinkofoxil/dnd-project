@@ -1,18 +1,19 @@
 import React, {useEffect, useState} from 'react';
-import { Link } from 'react-router-dom';
-import LogoutButton from './users/LogoutButton';
+import { Link, useParams } from 'react-router-dom';
 import axios from 'axios';
 import "../css/account.css"
 
-const Account = () => {
+const UserAccount = () => {
 
   const [user, setUser] = useState({});
   const [profile, setProfile] = useState({});
+  const [error, setError] = useState('');
+  const { id } = useParams();
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const result = await axios.get('http://127.0.0.1:8000/api/v1/auth/users/me', {
+        const result = await axios.get(`http://127.0.0.1:8000/api/v1/auth/users/${id}`, {
           headers: { Authorization: `Bearer ${localStorage.getItem('access')}` }
         });
         await fetch(`http://127.0.0.1:8000/api/v1/user/${result.data.id}/profiles`)
@@ -25,14 +26,26 @@ const Account = () => {
       }
     };
     fetchData();
-  }, []);
+  }, [id]);
 
   return (
     <div>
     <div className='AccountPage'>
       <h1>Аккаунт</h1>
       <h3>Имя пользователя: {user.username}</h3>
-      <LogoutButton />
+      <button onClick={() => {
+            axios.post(`http://127.0.0.1:8000/api/v1/users/${id}/friend/`, {}, {
+                headers: { Authorization: `Bearer ${localStorage.getItem('access')}` }
+            })
+            .then((response) => {
+                console.log(response);
+            })
+            .catch((error) => {
+                setError(error.response.data.non_field_errors)
+            });
+        }}>Добавить в друзья
+      </button>
+      {error && <div className='notification'>{error}</div>}
     </div>
     <div>
       {profile.results?.map(item => (
@@ -60,4 +73,4 @@ const Account = () => {
   );
 };
 
-export default Account;
+export default UserAccount;

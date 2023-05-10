@@ -44,7 +44,7 @@ class ProfileSerializer(serializers.ModelSerializer):
             "class_name", "level", "charisma",
             "description", "strength", "dexterity",
             "constitution", "intelligence", "wisdom",
-            "user"
+            "user", "user_id"
 
         )
 

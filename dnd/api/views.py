@@ -1,6 +1,8 @@
+from django.shortcuts import get_object_or_404
 from rest_framework import generics, viewsets
 from rest_framework.views import APIView
 from rest_framework.response import Response
+from rest_framework.decorators import action
 from rest_framework import mixins, viewsets, permissions, status
 
 from dnd_profile.models import Profile, User
@@ -32,7 +34,8 @@ class MyProfilesViewSet(viewsets.ReadOnlyModelViewSet):
         return Profile.objects.filter(user=user_id)
 
 
-class FriendsListViewSet(viewsets.ModelViewSet):
+class FriendsListViewSet(mixins.ListModelMixin,
+                         viewsets.GenericViewSet):
     serializer_class = FriendshipSerializer
     permission_classes = [permissions.IsAuthenticated]
 
@@ -40,23 +43,32 @@ class FriendsListViewSet(viewsets.ModelViewSet):
         user = self.request.user
         return Friendship.objects.filter(user=user)
 
-    def perform_create(self, serializer):
-        user = self.request.user
-        serializer.save(user=user)
 
-
-class FriendsCreateDestroyViewSet(viewsets.ViewSet):
+class FriendsCreateDestroyViewSet(mixins.CreateModelMixin,
+                                  mixins.DestroyModelMixin,
+                                  viewsets.GenericViewSet):
     serializer_class = FriendshipSerializer
     permission_classes = [permissions.IsAuthenticated]
 
-    def create(self, request, user_id=None):
-        friend = User.objects.get(id=user_id)
-        Friendship.objects.create(user=request.user, friend=friend)
-        return Response(status=status.HTTP_201_CREATED)
+    def get_serializer_context(self):
+        context = super().get_serializer_context()
+        context['friend'] = self.kwargs.get('user_id')
+        return context
 
-    def destroy(self, request, user_id=None):
-        friend = User.objects.get(id=user_id)
-        Friendship.objects.filter(user=request.user, friend=friend).delete()
+    def perform_create(self, serializer):
+        serializer.save(
+            user=self.request.user,
+            friend=get_object_or_404(
+                User, id=self.kwargs.get('user_id')
+            ))
+
+    @action(methods=['delete'], detail=True)
+    def delete(self, request, user_id):
+        get_object_or_404(
+            Friendship,
+            user=request.user,
+            friend_id=user_id
+        ).delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 

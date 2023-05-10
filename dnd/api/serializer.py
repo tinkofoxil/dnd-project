@@ -20,11 +20,15 @@ class FriendshipSerializer(serializers.ModelSerializer):
         fields = ('pk', 'user', 'friend')
 
     def validate(self, data):
-        user = self.context['request'].user
-        friend = data['friend']
+        user = User.objects.get(id=self.context['request'].user.id)
+        friend = User.objects.get(id=self.context['friend'])
         if user == friend:
             raise serializers.ValidationError(
                 'Нельзя добавить самого себя в друзья.'
+            )
+        if Friendship.objects.filter(user=user, friend=friend).exists():
+            raise serializers.ValidationError(
+                'Пользователь уже есть у Вас в друзьях!'
             )
         return data
 

@@ -8,6 +8,7 @@ const UserAccount = () => {
   const [user, setUser] = useState({});
   const [profile, setProfile] = useState({});
   const [error, setError] = useState('');
+  const [isFriendAdded, setIsFriendAdded] = useState(false);
   const { id } = useParams();
 
   useEffect(() => {
@@ -31,6 +32,7 @@ const UserAccount = () => {
   return (
     <div>
     <div className='AccountPage'>
+    {isFriendAdded && <div className="notification">Успешное добавление в друзья!</div>}
       <h1>Аккаунт</h1>
       <h3>Имя пользователя: {user.username}</h3>
       <button onClick={() => {
@@ -39,6 +41,7 @@ const UserAccount = () => {
             })
             .then((response) => {
                 console.log(response);
+                setIsFriendAdded(true);
             })
             .catch((error) => {
                 setError(error.response.data.non_field_errors)

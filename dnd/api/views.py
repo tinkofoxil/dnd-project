@@ -1,6 +1,5 @@
 from django.shortcuts import get_object_or_404
 from rest_framework import generics, viewsets
-from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.decorators import action
 from rest_framework import mixins, viewsets, permissions, status
@@ -24,6 +23,7 @@ class ProfileViewSet(viewsets.ModelViewSet):
 
 
 class MyProfilesViewSet(viewsets.ReadOnlyModelViewSet):
+    """Вюсет для акаунта пользователя."""
 
     queryset = Profile.objects.all()
     serializer_class = ProfileSerializer
@@ -47,6 +47,7 @@ class FriendsListViewSet(mixins.ListModelMixin,
 class FriendsCreateDestroyViewSet(mixins.CreateModelMixin,
                                   mixins.DestroyModelMixin,
                                   viewsets.GenericViewSet):
+    """Вьюсет для добавления/удаления друга."""
     serializer_class = FriendshipSerializer
     permission_classes = [permissions.IsAuthenticated]
 

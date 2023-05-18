@@ -16,6 +16,22 @@ router.register(
     views.FriendsCreateDestroyViewSet,
     basename='add_delete_friend'
 )
+router.register('party', views.GameViewSet, basename='party')
+router.register(
+    r'party/(?P<game_id>\d+)/join',
+    views.GameUserViewSet,
+    basename='party_join'
+)
+router.register(
+    'users/invitation',
+    views.InvitationReadViewSet,
+    basename='invitation_requests'
+)
+router.register(
+    r'party/(?P<game_id>\d+)/users/(?P<user_id>\d+)/invite',
+    views.InvitationCreateViewSet,
+    basename='send_invite'
+)
 
 urlpatterns = [
     path('api/v1/', include(router.urls)),

@@ -34,8 +34,13 @@ class Profile(models.Model):
         default='N'
     )
     race = models.CharField(max_length=50)
-    class_name = models.CharField(max_length=50)
-    level = models.IntegerField()
+    class_name = models.CharField(
+        max_length=50,
+        verbose_name='Название класса',
+    )
+    level = models.IntegerField(
+        verbose_name='Уровень',
+    )
     strength = models.IntegerField()
     dexterity = models.IntegerField()
     constitution = models.IntegerField()

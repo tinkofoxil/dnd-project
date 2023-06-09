@@ -7,6 +7,7 @@ from users.models import Friendship
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
+        ref_name = "api_user"
         model = User
         fields = ('pk', 'username')
 

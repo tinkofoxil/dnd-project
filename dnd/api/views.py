@@ -2,6 +2,7 @@ from django.shortcuts import get_object_or_404
 from rest_framework import generics, viewsets
 from rest_framework.response import Response
 from rest_framework.decorators import action
+from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticated
 from rest_framework import mixins, viewsets, permissions, status
 
 from dnd_profile.models import Profile, User
@@ -33,10 +34,10 @@ class MyProfilesViewSet(viewsets.ReadOnlyModelViewSet):
 
     queryset = Profile.objects.all()
     serializer_class = ProfileSerializer
-    permission_classes = (ReadOnly,)
+    permission_classes = (IsAuthenticatedOrReadOnly, )
 
     def get_queryset(self):
-        user_id = self.kwargs['user_id']
+        user_id = self.kwargs.get('user_id')
         return Profile.objects.filter(user=user_id)
 
 
@@ -55,7 +56,7 @@ class FriendsCreateDestroyViewSet(mixins.CreateModelMixin,
                                   viewsets.GenericViewSet):
     """Вьюсет для добавления/удаления друга."""
     serializer_class = FriendshipSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticated, ]
 
     def get_serializer_context(self):
         context = super().get_serializer_context()
@@ -82,7 +83,7 @@ class FriendsCreateDestroyViewSet(mixins.CreateModelMixin,
 class GameViewSet(viewsets.ModelViewSet):
     queryset = Game.objects.all()
     serializer_class = GameSerializer
-    permission_classes = (permissions.IsAuthenticated, )
+    permission_classes = ()
 
 
 class InvitationCreateViewSet(
@@ -111,7 +112,7 @@ class InvitationReadViewSet(
     viewsets.GenericViewSet
 ):
     serializer_class = InvitationSerializer
-    permission_classes = (permissions.IsAuthenticated, )
+    permission_classes = (IsAuthenticated, )
 
     def get_queryset(self):
         user = self.request.user

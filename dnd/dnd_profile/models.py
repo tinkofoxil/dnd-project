@@ -41,13 +41,23 @@ class Profile(models.Model):
     level = models.IntegerField(
         verbose_name='Уровень',
     )
-    strength = models.IntegerField()
+    strength = models.IntegerField(
+        verbose_name='Сила',
+    )
     dexterity = models.IntegerField()
     constitution = models.IntegerField()
-    intelligence = models.IntegerField()
-    wisdom = models.IntegerField()
-    charisma = models.IntegerField()
-    description = models.TextField()
+    intelligence = models.IntegerField(
+        verbose_name='Интелект'
+    )
+    wisdom = models.IntegerField(
+        verbose_name='Мудрость'
+    )
+    charisma = models.IntegerField(
+        verbose_name='Харизма'
+    )
+    description = models.TextField(
+        verbose_name='Описание'
+    )
     created_at = models.DateTimeField(
         auto_now_add=True,
         verbose_name='Дата создания',

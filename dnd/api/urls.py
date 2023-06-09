@@ -11,7 +11,6 @@ from . import views
 
 router = routers.SimpleRouter()
 router.register(r'profile', views.ProfileViewSet)
-router.register(r'game', views.GameViewSet)
 router.register(r'user/(?P<user_id>\d+)/profiles', views.MyProfilesViewSet)
 router.register('users/friends', views.FriendsListViewSet, basename='friends')
 router.register(

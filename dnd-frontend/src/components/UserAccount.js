@@ -2,6 +2,7 @@ import React, {useEffect, useState} from 'react';
 import { Link, useParams } from 'react-router-dom';
 import axios from 'axios';
 import "../css/account.css"
+import Account from './Account';
 
 const UserAccount = () => {
 
@@ -30,13 +31,13 @@ const UserAccount = () => {
     fetchData();
   }, [id]);
 
-  return (
+  if (user.id !== parseInt(userId)) {
+    return (
     <div>
     <div className='AccountPage'>
     {isFriendAdded && <div className="notification">Успешное добавление в друзья!</div>}
       <h1>Аккаунт</h1>
       <h3>Имя пользователя: {user.username}</h3>
-      {user.id !== parseInt(userId) && (
         <button 
           onClick={() => {
             axios.post(`http://127.0.0.1:8000/api/v1/users/${id}/friend/`, {}, {
@@ -52,7 +53,6 @@ const UserAccount = () => {
           }}>
           Добавить в друзья
         </button>
-        )}
       {error && <div className='notification'>{error}</div>}
     </div>
     <div>
@@ -79,6 +79,9 @@ const UserAccount = () => {
     </div>
     </div>
   );
+  } else {
+    return <Account />
+  }
 };
 
 export default UserAccount;

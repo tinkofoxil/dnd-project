@@ -4,7 +4,8 @@ from .models import Game, GameUser
 
 
 class GameAdmin(admin.ModelAdmin):
-    fields = ['name']
+    fields = ['name', 'status']
+    search_fields = ('name',)
 
 
 class GameUserAdmin(admin.ModelAdmin):

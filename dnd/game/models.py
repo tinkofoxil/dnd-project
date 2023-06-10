@@ -2,6 +2,12 @@ from django.db import models
 
 from users.models import User
 
+GAME_STATUSES = (
+    ('created', 'Создана комната'),
+    ('started', 'Игра началась'),
+    ('finished', 'Игра завершилась')
+)
+
 
 class Game(models.Model):
     """Модель комнаты."""
@@ -10,6 +16,27 @@ class Game(models.Model):
         unique=True,
         max_length=150,
         verbose_name='Название комнаты'
+    )
+    status = models.CharField(
+        max_length=50,
+        choices=GAME_STATUSES,
+        default='created',
+        verbose_name='Статус игры'
+    )
+    start_time = models.DateTimeField(
+        blank=True,
+        null=True,
+        verbose_name='Время начала игры'
+    )
+    finish_time = models.DateTimeField(
+        blank=True,
+        null=True,
+        verbose_name='Время завершения игры'
+    )
+    players = models.ManyToManyField(
+        User,
+        through='GameUser',
+        verbose_name='Игроки'
     )
 
     class Meta:
@@ -51,6 +78,8 @@ class Invitation(models.Model):
 
 
 class GameUser(models.Model):
+    """Модель Игрок-Комната."""
+
     user = models.ForeignKey(
         User,
         on_delete=models.CASCADE,

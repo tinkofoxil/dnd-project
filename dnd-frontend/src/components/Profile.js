@@ -50,6 +50,12 @@ const Profile = () => {
                         <li>Раса: {profile.race}</li>
                         <li>Класс: {profile.class_name}</li>
                         <li>Уровень: {profile.level}</li>
+                        <li>Сила: {profile.strength}</li>
+                        <li>Ловкость: {profile.dexterity}</li>
+                        <li>Телосложение: {profile.constitution}</li>
+                        <li>Интелект: {profile.intelligence}</li>
+                        <li>Мудрость: {profile.wisdom}</li>
+                        <li>Харизма: {profile.charisma}</li>
                     </ul> 
                 </div>
             </div>

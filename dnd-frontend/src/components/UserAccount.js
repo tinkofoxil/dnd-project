@@ -6,6 +6,7 @@ import "../css/account.css"
 const UserAccount = () => {
 
   const [user, setUser] = useState({});
+  const userId = localStorage.getItem('user_id');
   const [profile, setProfile] = useState({});
   const [error, setError] = useState('');
   const [isFriendAdded, setIsFriendAdded] = useState(false);
@@ -35,7 +36,9 @@ const UserAccount = () => {
     {isFriendAdded && <div className="notification">Успешное добавление в друзья!</div>}
       <h1>Аккаунт</h1>
       <h3>Имя пользователя: {user.username}</h3>
-      <button onClick={() => {
+      {user.id !== parseInt(userId) && (
+        <button 
+          onClick={() => {
             axios.post(`http://127.0.0.1:8000/api/v1/users/${id}/friend/`, {}, {
                 headers: { Authorization: `Bearer ${localStorage.getItem('access')}` }
             })
@@ -46,8 +49,10 @@ const UserAccount = () => {
             .catch((error) => {
                 setError(error.response.data.non_field_errors)
             });
-        }}>Добавить в друзья
-      </button>
+          }}>
+          Добавить в друзья
+        </button>
+        )}
       {error && <div className='notification'>{error}</div>}
     </div>
     <div>

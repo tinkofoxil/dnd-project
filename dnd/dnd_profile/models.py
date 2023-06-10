@@ -44,8 +44,12 @@ class Profile(models.Model):
     strength = models.IntegerField(
         verbose_name='Сила',
     )
-    dexterity = models.IntegerField()
-    constitution = models.IntegerField()
+    dexterity = models.IntegerField(
+        verbose_name='Ловкость'
+    )
+    constitution = models.IntegerField(
+        verbose_name='Телосложение'
+    )
     intelligence = models.IntegerField(
         verbose_name='Интелект'
     )

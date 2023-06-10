@@ -71,6 +71,10 @@ class GameSerializer(serializers.ModelSerializer):
         fields = (
             'id',
             'name',
+            'status',
+            'start_time',
+            'finish_time',
+            'players'
         )
 
     def validate_name(self, name):

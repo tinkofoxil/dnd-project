@@ -14,8 +14,17 @@ from .serializer import (
     FriendshipSerializer,
     InvitationSerializer,
     GameUserSerializer,
+    UserSerializer
 )
 from .permissions import IsOwnerOrReadOnly, ReadOnly
+
+
+class UserReadViewSet(viewsets.ReadOnlyModelViewSet):
+    """Вюсет для пользователя."""
+
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+    permission_classes = (ReadOnly, )
 
 
 class ProfileViewSet(viewsets.ModelViewSet):
@@ -30,7 +39,7 @@ class ProfileViewSet(viewsets.ModelViewSet):
 
 
 class MyProfilesViewSet(viewsets.ReadOnlyModelViewSet):
-    """Вюсет для акаунта пользователя."""
+    """Вюсет для персонажей пользователя."""
 
     queryset = Profile.objects.all()
     serializer_class = ProfileSerializer

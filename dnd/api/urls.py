@@ -18,6 +18,7 @@ router.register(
     views.FriendsCreateDestroyViewSet,
     basename='add_delete_friend'
 )
+router.register(r'users', views.UserReadViewSet)
 router.register('party', views.GameViewSet, basename='party')
 router.register(
     r'party/(?P<game_id>\d+)/join',

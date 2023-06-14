@@ -59,7 +59,7 @@ const Profile = () => {
                     </ul> 
                 </div>
             </div>
-            <div className="profile-section">
+            <div className="profile-section-description">
                 <ul>
                     <li>Описание: {profile.description}</li>
                     <li><Link className='profile-link' to={`/account/${profile.user_id}`}>Автор: {profile.user}</Link></li>

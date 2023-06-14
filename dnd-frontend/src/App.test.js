@@ -1,8 +1,21 @@
+import React from 'react';
 import { render, screen } from '@testing-library/react';
+import { MemoryRouter } from 'react-router-dom';
 import App from './App';
 
-test('renders learn react link', () => {
-  render(<App />);
-  const linkElement = screen.getByText(/learn react/i);
-  expect(linkElement).toBeInTheDocument();
+test('renders App component', () => {
+  render(
+    <MemoryRouter>
+      <App />
+    </MemoryRouter>
+  );
+
+  // Проверяем, что компоненты Header, Main, Footer отрендерены
+  const headerElement = screen.getByTestId('header');
+  const mainElement = screen.getByTestId('main');
+  const footerElement = screen.getByTestId('footer');
+
+  expect(headerElement).toBeInTheDocument();
+  expect(mainElement).toBeInTheDocument();
+  expect(footerElement).toBeInTheDocument();
 });

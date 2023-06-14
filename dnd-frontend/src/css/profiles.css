@@ -52,6 +52,16 @@
     box-shadow: 0 0 5px #ccc;
   }
 
+  .profile-section-description {
+    width: calc((33.33% - 10px) * 2);
+    background-color: #f5f5f5;
+    padding: 10px;
+    margin-bottom: 20px;
+    margin-left: 20px;
+    border: 1px solid #ccc;
+    box-shadow: 0 0 5px #ccc;
+  }
+
   .profile-section-right {
     background-color: #f5f5f5;
     padding: 20px;

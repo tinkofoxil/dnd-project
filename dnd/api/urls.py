@@ -35,6 +35,11 @@ router.register(
     views.InvitationCreateViewSet,
     basename='send_invite'
 )
+router.register(
+    r'profile/(?P<profile_id>\d+)/item',
+    views.ItemViewSet,
+    basename='profile_item'
+)
 
 schema_view = get_schema_view(
     openapi.Info(
@@ -56,6 +61,7 @@ urlpatterns = [
         schema_view.with_ui('redoc', cache_timeout=0),
         name='schema-redoc'
     ),
+    path('', include("django_prometheus.urls")),
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

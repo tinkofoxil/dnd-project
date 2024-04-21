@@ -1,0 +1,41 @@
+version: '3'
+services:
+  web-app:
+    build:
+      context: ..
+    ports:
+      - "8000:8000"
+    container_name: dnd-project
+  
+  cadvisor:
+    image: gcr.io/cadvisor/cadvisor:latest
+    mem_limit: 0.5G
+    container_name: cadvisor
+    ports:
+      - "8080:8080"
+    volumes:
+      - /:/rootfs:ro
+      - /var/run:/var/run:rw
+      - /sys:/sys:ro
+      - /var/lib/docker/:/var/lib/docker:ro
+
+
+  prometheus:
+    image: prom/prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml  # Создайте файл конфигурации prometheus.yml
+
+  grafana:
+    image: grafana/grafana
+    ports:
+      - "3000:3000"
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+    depends_on:
+      - prometheus
+
+volumes:
+  prometheus_data: {}

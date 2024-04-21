@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from dnd_profile.models import Profile, User
+from dnd_profile.models import Profile, User, Inventory, Item
 from game.models import Game, GameUser, Invitation
 from users.models import Friendship
 
@@ -151,3 +151,26 @@ class GameUserSerializer(serializers.ModelSerializer):
                 'Вы уже присоединились к комнате.'
             )
         return data
+
+
+class ItemSerializer(serializers.ModelSerializer):
+    character = serializers.IntegerField(
+        source='character.id',
+        read_only=True
+    )
+
+    class Meta:
+        model = Item
+        fields = (
+            'name',
+            'image',
+            'description',
+            'character'
+        )
+
+
+class InvetorySerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Inventory
+        fields = '__all__'

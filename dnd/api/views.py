@@ -5,7 +5,7 @@ from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticated
 from rest_framework import mixins, viewsets, permissions, status
 
-from dnd_profile.models import Profile, User
+from dnd_profile.models import Profile, User, Item, Inventory
 from game.models import Game, GameUser, Invitation
 from users.models import Friendship
 from .serializer import (
@@ -13,6 +13,8 @@ from .serializer import (
     GameSerializer,
     FriendshipSerializer,
     InvitationSerializer,
+    InvetorySerializer,
+    ItemSerializer,
     GameUserSerializer,
     UserSerializer
 )
@@ -152,3 +154,14 @@ class GameUserViewSet(
         ).delete()
 
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+class ItemViewSet(viewsets.ModelViewSet):
+    queryset = Item.objects.all()
+    serializer_class = ItemSerializer
+    permission_classes = (permissions.IsAuthenticated, )
+
+    def perform_create(self, serializer):
+        profile_id = self.kwargs['profile_id']
+        character = Profile.objects.get(id=profile_id)
+        serializer.save(character=character)

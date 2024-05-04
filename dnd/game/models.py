@@ -1,6 +1,6 @@
 from django.db import models
 
-from users.models import User
+from users.models import CustomUser
 
 GAME_STATUSES = (
     ('created', 'Создана комната'),
@@ -34,7 +34,7 @@ class Game(models.Model):
         verbose_name='Время завершения игры'
     )
     players = models.ManyToManyField(
-        User,
+        CustomUser,
         through='GameUser',
         verbose_name='Игроки'
     )
@@ -51,13 +51,13 @@ class Invitation(models.Model):
     """Модель приглашения в комнату."""
 
     sender = models.ForeignKey(
-        User,
+        CustomUser,
         on_delete=models.CASCADE,
         related_name='invitations_sent',
         verbose_name='Отправитель'
     )
     recipient = models.ForeignKey(
-        User,
+        CustomUser,
         on_delete=models.CASCADE,
         related_name='invitations_received',
         verbose_name='Получатель'
@@ -81,7 +81,7 @@ class GameUser(models.Model):
     """Модель Игрок-Комната."""
 
     user = models.ForeignKey(
-        User,
+        CustomUser,
         on_delete=models.CASCADE,
         verbose_name='Игрок'
     )

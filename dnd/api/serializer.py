@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from dnd_profile.models import Profile, User, Inventory, Item
+from dnd_profile.models import Profile, CustomUser, Inventory, Item
 from game.models import Game, GameUser, Invitation
 from users.models import Friendship
 
@@ -8,8 +8,8 @@ from users.models import Friendship
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         ref_name = "api_user"
-        model = User
-        fields = ('pk', 'username')
+        model = CustomUser
+        fields = ('pk', 'username', 'avatar', 'email', 'birth_date', 'registration_date')
 
 
 class FriendshipSerializer(serializers.ModelSerializer):
@@ -21,8 +21,8 @@ class FriendshipSerializer(serializers.ModelSerializer):
         fields = ('pk', 'user', 'friend')
 
     def validate(self, data):
-        user = User.objects.get(id=self.context['request'].user.id)
-        friend = User.objects.get(id=self.context['friend'])
+        user = CustomUser.objects.get(id=self.context['request'].user.id)
+        friend = CustomUser.objects.get(id=self.context['friend'])
         if user == friend:
             raise serializers.ValidationError(
                 'Нельзя добавить самого себя в друзья.'
@@ -41,7 +41,7 @@ class ProfileSerializer(serializers.ModelSerializer):
         model = Profile
         fields = (
             "pk", "name", "age",
-            "gender", "image", "race",
+            "image", "race",
             "class_name", "level", "charisma",
             "description", "strength", "dexterity",
             "constitution", "intelligence", "wisdom",
@@ -106,9 +106,9 @@ class InvitationSerializer(serializers.ModelSerializer):
         )
 
     def validate(self, data):
-        sender = User.objects.get(id=self.context['request'].user.id)
+        sender = CustomUser.objects.get(id=self.context['request'].user.id)
         recipient_id = self.context['view'].kwargs['user_id']
-        recipient = User.objects.get(id=recipient_id)
+        recipient = CustomUser.objects.get(id=recipient_id)
 
         if sender == recipient:
             raise serializers.ValidationError(
@@ -139,9 +139,9 @@ class GameUserSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
     def validate(self, data):
-        user = User.objects.get(id=self.context['request'].user.id)
+        user = CustomUser.objects.get(id=self.context['request'].user.id)
         game_id = self.context['view'].kwargs['game_id']
-        game = User.objects.get(id=game_id)
+        game = CustomUser.objects.get(id=game_id)
 
         if GameUser.objects.filter(
             user=user,

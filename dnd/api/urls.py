@@ -54,6 +54,7 @@ schema_view = get_schema_view(
 
 urlpatterns = [
     path('api/v1/', include(router.urls)),
+    path('api/v1/users/upload_avatar/', views.UploadAvatarAPIView.as_view(), name='upload_avatar'),
     path('api/v1/auth/', include('djoser.urls')),
     path('api/v1/auth/', include('djoser.urls.jwt')),
     path(

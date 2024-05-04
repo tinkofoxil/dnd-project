@@ -1,17 +1,22 @@
 from django.contrib.auth import get_user_model
 from django.db import models
 
-User = get_user_model()
-
-Genders = [
-    ('W', 'Woman'),
-    ('M', 'Man'),
-    ('N', 'None')
-]
-
+from users.models import CustomUser
 
 class Profile(models.Model):
     """Модель профиля/анкеты игрока."""
+
+    RACE_CHOICES = (
+        ('Драконорожденный', 'Dragonborn'),
+        ('Дварф', 'Dwarf'),
+        ('Эльф', 'Elf'),
+        ('Гном', 'Gnome'),
+        ('Полуэльф', 'Half-Elf'),
+        ('Полуорк', 'Half-Orc'),
+        ('Халфлинг', 'Halfling'),
+        ('Человек', 'Human'),
+        ('Тифлинг', 'Tiefling'),
+    )
 
     name = models.CharField(
         max_length=64,
@@ -28,12 +33,7 @@ class Profile(models.Model):
         blank=False,
         null=True,
     )
-    gender = models.CharField(
-        choices=Genders,
-        max_length=1,
-        default='N'
-    )
-    race = models.CharField(max_length=50)
+    race = models.CharField(max_length=50, choices=RACE_CHOICES)
     class_name = models.CharField(
         max_length=50,
         verbose_name='Название класса',
@@ -68,7 +68,7 @@ class Profile(models.Model):
     )
     updated_at = models.DateTimeField(auto_now=True)
     user = models.ForeignKey(
-        User,
+        CustomUser,
         on_delete=models.CASCADE,
         verbose_name='Пользователь',
         related_name='profiles',

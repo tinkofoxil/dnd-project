@@ -4,8 +4,9 @@ from rest_framework.response import Response
 from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticated
 from rest_framework import mixins, viewsets, permissions, status
+from rest_framework.views import APIView
 
-from dnd_profile.models import Profile, User, Item, Inventory
+from dnd_profile.models import Profile, CustomUser, Item, Inventory
 from game.models import Game, GameUser, Invitation
 from users.models import Friendship
 from .serializer import (
@@ -24,10 +25,24 @@ from .permissions import IsOwnerOrReadOnly, ReadOnly
 class UserReadViewSet(viewsets.ReadOnlyModelViewSet):
     """Вюсет для пользователя."""
 
-    queryset = User.objects.all()
+    queryset = CustomUser.objects.all()
     serializer_class = UserSerializer
     permission_classes = (ReadOnly, )
 
+
+class UploadAvatarAPIView(APIView):
+    def post(self, request):
+        user = request.user
+        serializer = UserSerializer(user, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class UserViewSet(viewsets.ModelViewSet):
+    queryset = CustomUser.objects.all()
+    serializer_class = UserSerializer
+    permission_classes = (IsOwnerOrReadOnly,)
 
 class ProfileViewSet(viewsets.ModelViewSet):
     """Вьюсет для профиля/анкеты."""
@@ -78,7 +93,7 @@ class FriendsCreateDestroyViewSet(mixins.CreateModelMixin,
         serializer.save(
             user=self.request.user,
             friend=get_object_or_404(
-                User, id=self.kwargs.get('user_id')
+                CustomUser, id=self.kwargs.get('user_id')
             ))
 
     @action(methods=['delete'], detail=True)
@@ -109,7 +124,7 @@ class InvitationCreateViewSet(
         game_id = self.kwargs['game_id']
         user_id = self.kwargs['user_id']
         game = Game.objects.get(id=game_id)
-        recipient = User.objects.get(id=user_id)
+        recipient = CustomUser.objects.get(id=user_id)
         serializer.save(
             sender=self.request.user,
             recipient=recipient,

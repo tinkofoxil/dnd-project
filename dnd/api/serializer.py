@@ -40,13 +40,28 @@ class ProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = Profile
         fields = (
-            "pk", "name", "age",
-            "image", "race",
-            "class_name", "level", "charisma",
-            "description", "strength", "dexterity",
-            "constitution", "intelligence", "wisdom",
-            "user", "user_id"
-
+            "pk",
+            "name",
+            "age",
+            "image",
+            "race",
+            "class_name",
+            "level",
+            "strength",
+            "dexterity",
+            "constitution",
+            "intelligence",
+            "wisdom",
+            "charisma",
+            "strength_modifier",
+            "dexterity_modifier",
+            "constitution_modifier",
+            "intelligence_modifier",
+            "wisdom_modifier",
+            "charisma_modifier",
+            "description",
+            "user",
+            "user_id",
         )
 
     def validate_age(self, age):
@@ -62,6 +77,43 @@ class ProfileSerializer(serializers.ModelSerializer):
                 'Уровень не может быть отрицательным'
             )
         return level
+
+    def create(self, validated_data):
+        strength = validated_data.get('strength')
+        dexterity = validated_data.get('dexterity')
+        constitution = validated_data.get('constitution')
+        intelligence = validated_data.get('intelligence')
+        wisdom = validated_data.get('wisdom')
+        charisma = validated_data.get('charisma')
+
+        validated_data['strength_modifier'] = self.get_ability_modifier(strength)
+        validated_data['dexterity_modifier'] = self.get_ability_modifier(dexterity)
+        validated_data['constitution_modifier'] = self.get_ability_modifier(constitution)
+        validated_data['intelligence_modifier'] = self.get_ability_modifier(intelligence)
+        validated_data['wisdom_modifier'] = self.get_ability_modifier(wisdom)
+        validated_data['charisma_modifier'] = self.get_ability_modifier(charisma)
+
+        return super().create(validated_data)
+
+    def update(self, instance, validated_data):
+        strength = validated_data.get('strength', instance.strength)
+        dexterity = validated_data.get('dexterity', instance.dexterity)
+        constitution = validated_data.get('constitution', instance.constitution)
+        intelligence = validated_data.get('intelligence', instance.intelligence)
+        wisdom = validated_data.get('wisdom', instance.wisdom)
+        charisma = validated_data.get('charisma', instance.charisma)
+
+        validated_data['strength_modifier'] = self.get_ability_modifier(strength)
+        validated_data['dexterity_modifier'] = self.get_ability_modifier(dexterity)
+        validated_data['constitution_modifier'] = self.get_ability_modifier(constitution)
+        validated_data['intelligence_modifier'] = self.get_ability_modifier(intelligence)
+        validated_data['wisdom_modifier'] = self.get_ability_modifier(wisdom)
+        validated_data['charisma_modifier'] = self.get_ability_modifier(charisma)
+
+        return super().update(instance, validated_data)
+
+    def get_ability_modifier(self, ability_score):
+        return (ability_score - 10) // 2
 
 
 class GameSerializer(serializers.ModelSerializer):

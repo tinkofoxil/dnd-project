@@ -18,6 +18,21 @@ class Profile(models.Model):
         ('Тифлинг', 'Tiefling'),
     )
 
+    CLASS_CHOICES = (
+        ('Бард', 'Bard'),
+        ('Варвар', 'Barbarian'),
+        ('Воин', 'Fighter'),
+        ('Волшебник', 'Wizard'),
+        ('Друид', 'Druid'),
+        ('Жрец', 'Cleric'),
+        ('Колдун', 'Warlock'),
+        ('Монах', 'Monk'),
+        ('Паладин', 'Paladin'),
+        ('Плут', 'Rogue'),
+        ('Следопыт', 'Ranger'),
+        ('Чародей', 'Sorcerer'),
+    )
+
     name = models.CharField(
         max_length=64,
         verbose_name='Имя',
@@ -37,9 +52,14 @@ class Profile(models.Model):
     class_name = models.CharField(
         max_length=50,
         verbose_name='Название класса',
+        choices=CLASS_CHOICES
     )
     level = models.IntegerField(
         verbose_name='Уровень',
+    )
+    proficiency_bonus = models.IntegerField(
+        verbose_name='Бонус владения',
+        default=2,
     )
     strength = models.IntegerField(
         verbose_name='Сила',
@@ -58,6 +78,24 @@ class Profile(models.Model):
     )
     charisma = models.IntegerField(
         verbose_name='Харизма'
+    )
+    strength_modifier = models.IntegerField(
+        verbose_name='Модификатор Силы', default=0
+    )
+    dexterity_modifier = models.IntegerField(
+        verbose_name='Модификатор Ловкости', default=0
+    )
+    constitution_modifier = models.IntegerField(
+        verbose_name='Модификатор Телосложения', default=0
+    )
+    intelligence_modifier = models.IntegerField(
+        verbose_name='Модификатор Интеллекта', default=0
+    )
+    wisdom_modifier = models.IntegerField(
+        verbose_name='Модификатор Мудрости', default=0
+    )
+    charisma_modifier = models.IntegerField(
+        verbose_name='Модификатор Харизмы', default=0
     )
     description = models.TextField(
         verbose_name='Описание'
@@ -107,7 +145,7 @@ class Item(models.Model):
         verbose_name_plural = 'Предметы'
 
     def __str__(self):
-        return f'{self.name} --- {self.character}'
+        return f'{self.name} --- {self.character.name}'
 
 
 class Inventory(models.Model):
@@ -126,4 +164,4 @@ class Inventory(models.Model):
         verbose_name_plural = 'Инвентари'
 
     def __str__(self):
-        return f'{self.character} --- {self.item}'
+        return f'Инвентарь {self.character.name}: {", ".join([item.name for item in self.item.all()])}'

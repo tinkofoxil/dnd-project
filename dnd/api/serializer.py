@@ -1,7 +1,7 @@
 from rest_framework import serializers
 
 from dnd_profile.models import Profile, CustomUser, Inventory, Item
-from game.models import Game, GameUser, Invitation
+from game.models import Game, GameUser, Invitation, GameSession
 from users.models import Friendship
 
 
@@ -117,92 +117,66 @@ class ProfileSerializer(serializers.ModelSerializer):
 
 
 class GameSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = Game
-        fields = (
-            'id',
-            'name',
-            'status',
-            'start_time',
-            'finish_time',
-            'players'
-        )
+        fields = ['pk', 'name', 'status', 'start_time', 'finish_time', 'players']
 
     def validate_name(self, name):
         if Game.objects.filter(name=name).exists():
             raise serializers.ValidationError(
                 'Комната с таким именем уже существует.'
             )
+        return name
 
 
 class InvitationSerializer(serializers.ModelSerializer):
-    sender = serializers.ReadOnlyField(
-        source='sender.username',
-    )
-    recipient = serializers.ReadOnlyField(
-        source='recipient.username',
-    )
-    game = serializers.IntegerField(
-        source='game.id',
-        read_only=True
-    )
+    sender = serializers.PrimaryKeyRelatedField(read_only=True)
 
     class Meta:
         model = Invitation
-        fields = (
-            'id',
-            'sender',
-            'recipient',
-            'game'
-        )
+        fields = '__all__'
 
-    def validate(self, data):
-        sender = CustomUser.objects.get(id=self.context['request'].user.id)
-        recipient_id = self.context['view'].kwargs['user_id']
-        recipient = CustomUser.objects.get(id=recipient_id)
+    def create(self, validated_data):
+        sender = self.context['request'].user
 
-        if sender == recipient:
-            raise serializers.ValidationError(
-                'Нельзя пригласить самого себя!'
-            )
+        validated_data['sender'] = sender
 
-        if Invitation.objects.filter(
-            sender=sender,
-            recipient=recipient
-        ).exists():
-            raise serializers.ValidationError('Приглашение уже отправлено!')
-
-        return data
+        return super().create(validated_data)
 
 
 class GameUserSerializer(serializers.ModelSerializer):
-    user = serializers.SlugRelatedField(
-        slug_field='username',
-        read_only=True
-    )
-    game = serializers.IntegerField(
-        source='game.id',
-        read_only=True
-    )
+    profile = serializers.PrimaryKeyRelatedField(queryset=Profile.objects.all())
+    user = serializers.PrimaryKeyRelatedField(read_only=True)
 
     class Meta:
         model = GameUser
         fields = '__all__'
 
-    def validate(self, data):
-        user = CustomUser.objects.get(id=self.context['request'].user.id)
-        game_id = self.context['view'].kwargs['game_id']
-        game = CustomUser.objects.get(id=game_id)
+    def create(self, validated_data):
+        user = self.context['request'].user
 
-        if GameUser.objects.filter(
-            user=user,
-            game=game
-        ).exists():
-            raise serializers.ValidationError(
-                'Вы уже присоединились к комнате.'
-            )
+        validated_data['user'] = user
+
+        return super().create(validated_data)
+
+    def validate(self, data):
+        user = self.context['request'].user
+
+        profile = data['profile']
+
+        if profile.user != user:
+            raise serializers.ValidationError("Этот персонаж не принадлежит вам.")
+
         return data
+
+
+class GameSessionSerializer(serializers.ModelSerializer):
+    game = serializers.StringRelatedField()
+    active_player = serializers.StringRelatedField()
+
+    class Meta:
+        model = GameSession
+        fields = '__all__'
 
 
 class ItemSerializer(serializers.ModelSerializer):

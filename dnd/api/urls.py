@@ -8,7 +8,6 @@ from rest_framework import routers
 
 from . import views
 
-
 router = routers.SimpleRouter()
 router.register(r'profile', views.ProfileViewSet)
 router.register(r'user/(?P<user_id>\d+)/profiles', views.MyProfilesViewSet)
@@ -19,27 +18,15 @@ router.register(
     basename='add_delete_friend'
 )
 router.register(r'users', views.UserReadViewSet)
-router.register('party', views.GameViewSet, basename='party')
-router.register(
-    r'party/(?P<game_id>\d+)/join',
-    views.GameUserViewSet,
-    basename='party_join'
-)
-router.register(
-    'users/invitation',
-    views.InvitationReadViewSet,
-    basename='invitation_requests'
-)
-router.register(
-    r'party/(?P<game_id>\d+)/users/(?P<user_id>\d+)/invite',
-    views.InvitationCreateViewSet,
-    basename='send_invite'
-)
 router.register(
     r'profile/(?P<profile_id>\d+)/item',
     views.ItemViewSet,
     basename='profile_item'
 )
+router.register(r'games', views.GameViewSet)
+router.register(r'gameusers', views.GameUserViewSet)
+router.register(r'invitations', views.InvitationViewSet)
+router.register(r'gamessessions', views.GameSessionViewSet)
 
 schema_view = get_schema_view(
     openapi.Info(
@@ -57,6 +44,8 @@ urlpatterns = [
     path('api/v1/users/upload_avatar/', views.UploadAvatarAPIView.as_view(), name='upload_avatar'),
     path('api/v1/auth/', include('djoser.urls')),
     path('api/v1/auth/', include('djoser.urls.jwt')),
+    path('api/v1/games/sessions/<int:pk>/end/', views.GameSessionViewSet.as_view({'post': 'end_session'}), name='end_game_session'),
+    path('api/v1/games/sessions/<int:pk>/next_round/', views.GameSessionViewSet.as_view({'post': 'next_round'}), name='next_round_game_session'),
     path(
         'api/v1/redoc/',
         schema_view.with_ui('redoc', cache_timeout=0),

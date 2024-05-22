@@ -1,4 +1,5 @@
 from django.shortcuts import get_object_or_404
+from django.utils import timezone
 from rest_framework import generics, viewsets
 from rest_framework.response import Response
 from rest_framework.decorators import action
@@ -7,11 +8,12 @@ from rest_framework import mixins, viewsets, permissions, status
 from rest_framework.views import APIView
 
 from dnd_profile.models import Profile, CustomUser, Item, Inventory
-from game.models import Game, GameUser, Invitation
+from game.models import Game, GameUser, GameSession, Invitation
 from users.models import Friendship
 from .serializer import (
     ProfileSerializer,
     GameSerializer,
+    GameSessionSerializer,
     FriendshipSerializer,
     InvitationSerializer,
     InvetorySerializer,
@@ -109,66 +111,32 @@ class FriendsCreateDestroyViewSet(mixins.CreateModelMixin,
 class GameViewSet(viewsets.ModelViewSet):
     queryset = Game.objects.all()
     serializer_class = GameSerializer
-    permission_classes = ()
+    permission_classes = [permissions.IsAuthenticated, ]
+
+    @action(detail=True, methods=['post'])
+    def start(self, request, pk=None):
+        game = self.get_object()
+        game.status = 'started'
+        game.save()
+        return Response({'status': 'game started'})
+
+    @action(detail=True, methods=['post'])
+    def end(self, request, pk=None):
+        game = self.get_object()
+        game.status = 'finished'
+        game.save()
+        return Response({'status': 'game ended'})
 
 
-class InvitationCreateViewSet(
-    mixins.CreateModelMixin,
-    viewsets.GenericViewSet
-):
+class InvitationViewSet(viewsets.ModelViewSet):
     queryset = Invitation.objects.all()
     serializer_class = InvitationSerializer
     permission_classes = (permissions.IsAuthenticated, )
 
-    def perform_create(self, serializer):
-        game_id = self.kwargs['game_id']
-        user_id = self.kwargs['user_id']
-        game = Game.objects.get(id=game_id)
-        recipient = CustomUser.objects.get(id=user_id)
-        serializer.save(
-            sender=self.request.user,
-            recipient=recipient,
-            game=game
-        )
 
-
-class InvitationReadViewSet(
-    mixins.ListModelMixin,
-    mixins.RetrieveModelMixin,
-    viewsets.GenericViewSet
-):
-    serializer_class = InvitationSerializer
-    permission_classes = (IsAuthenticated, )
-
-    def get_queryset(self):
-        user = self.request.user
-        return Invitation.objects.filter(recipient=user)
-
-
-class GameUserViewSet(
-    mixins.CreateModelMixin,
-    mixins.DestroyModelMixin,
-    viewsets.GenericViewSet
-):
+class GameUserViewSet(viewsets.ModelViewSet):
     queryset = GameUser.objects.all()
     serializer_class = GameUserSerializer
-    permission_classes = (permissions.IsAuthenticated, )
-
-    def perform_create(self, serializer):
-        game_id = self.kwargs['game_id']
-        game = Game.objects.get(id=game_id)
-        user = self.request.user
-        serializer.save(user=user, game=game)
-
-    @action(methods=['delete'], detail=True)
-    def delete(self, request, game_id):
-        get_object_or_404(
-            GameUser,
-            user=request.user,
-            id=game_id
-        ).delete()
-
-        return Response(status=status.HTTP_204_NO_CONTENT)
 
 
 class ItemViewSet(viewsets.ModelViewSet):
@@ -180,3 +148,22 @@ class ItemViewSet(viewsets.ModelViewSet):
         profile_id = self.kwargs['profile_id']
         character = Profile.objects.get(id=profile_id)
         serializer.save(character=character)
+
+
+class GameSessionViewSet(viewsets.ModelViewSet):
+    queryset = GameSession.objects.all()
+    serializer_class = GameSessionSerializer
+
+    @action(detail=True, methods=['post'])
+    def next_round(self, request, pk=None):
+        session = self.get_object()
+        session.current_round += 1
+        session.save()
+        return Response({'status': f'Round {session.current_round} started'})
+
+    @action(detail=True, methods=['post'])
+    def end_session(self, request, pk=None):
+        session = self.get_object()
+        session.end_time = timezone.now()
+        session.save()
+        return Response({'status': 'Session ended'})

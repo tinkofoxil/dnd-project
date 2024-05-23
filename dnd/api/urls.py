@@ -17,12 +17,9 @@ router.register(
     views.FriendsCreateDestroyViewSet,
     basename='add_delete_friend'
 )
-router.register(r'users', views.UserReadViewSet)
-router.register(
-    r'profile/(?P<profile_id>\d+)/item',
-    views.ItemViewSet,
-    basename='profile_item'
-)
+router.register(r'users', views.UserViewSet)
+router.register(r'items', views.ItemViewSet)
+router.register(r'inventories', views.InventoryViewSet)
 router.register(r'games', views.GameViewSet)
 router.register(r'gameusers', views.GameUserViewSet)
 router.register(r'invitations', views.InvitationViewSet)
@@ -41,11 +38,11 @@ schema_view = get_schema_view(
 
 urlpatterns = [
     path('api/v1/', include(router.urls)),
-    path('api/v1/users/upload_avatar/', views.UploadAvatarAPIView.as_view(), name='upload_avatar'),
+    path('api/v1/upload_avatar/', views.UploadAvatarAPIView.as_view(), name='upload_avatar'),
     path('api/v1/auth/', include('djoser.urls')),
     path('api/v1/auth/', include('djoser.urls.jwt')),
-    path('api/v1/games/sessions/<int:pk>/end/', views.GameSessionViewSet.as_view({'post': 'end_session'}), name='end_game_session'),
-    path('api/v1/games/sessions/<int:pk>/next_round/', views.GameSessionViewSet.as_view({'post': 'next_round'}), name='next_round_game_session'),
+    path('api/v1/gamessessions/<int:pk>/end/', views.GameSessionViewSet.as_view({'post': 'end_session'}), name='end_game_session'),
+    path('api/v1/gamessessions/<int:pk>/next_round/', views.GameSessionViewSet.as_view({'post': 'next_round'}), name='next_round_game_session'),
     path(
         'api/v1/redoc/',
         schema_view.with_ui('redoc', cache_timeout=0),

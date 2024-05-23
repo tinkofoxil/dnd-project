@@ -16,7 +16,7 @@ from .serializer import (
     GameSessionSerializer,
     FriendshipSerializer,
     InvitationSerializer,
-    InvetorySerializer,
+    InventorySerializer,
     ItemSerializer,
     GameUserSerializer,
     UserSerializer
@@ -33,6 +33,8 @@ class UserReadViewSet(viewsets.ReadOnlyModelViewSet):
 
 
 class UploadAvatarAPIView(APIView):
+    permission_classes = (IsAuthenticated, )
+
     def post(self, request):
         user = request.user
         serializer = UserSerializer(user, data=request.data, partial=True)
@@ -142,12 +144,11 @@ class GameUserViewSet(viewsets.ModelViewSet):
 class ItemViewSet(viewsets.ModelViewSet):
     queryset = Item.objects.all()
     serializer_class = ItemSerializer
-    permission_classes = (permissions.IsAuthenticated, )
 
-    def perform_create(self, serializer):
-        profile_id = self.kwargs['profile_id']
-        character = Profile.objects.get(id=profile_id)
-        serializer.save(character=character)
+
+class InventoryViewSet(viewsets.ModelViewSet):
+    queryset = Inventory.objects.all()
+    serializer_class = InventorySerializer
 
 
 class GameSessionViewSet(viewsets.ModelViewSet):

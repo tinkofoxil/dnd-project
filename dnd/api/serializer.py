@@ -34,8 +34,24 @@ class FriendshipSerializer(serializers.ModelSerializer):
         return data
 
 
+
+class ItemSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Item
+        fields = ['id', 'name', 'image', 'description']
+
+
+class InventorySerializer(serializers.ModelSerializer):
+    items = ItemSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = Inventory
+        fields = ['id', 'character', 'items']
+
+
 class ProfileSerializer(serializers.ModelSerializer):
     user = serializers.SlugRelatedField(slug_field="username", read_only=True)
+    inventory = InventorySerializer(many=True, read_only=True)
 
     class Meta:
         model = Profile
@@ -62,6 +78,7 @@ class ProfileSerializer(serializers.ModelSerializer):
             "description",
             "user",
             "user_id",
+            "inventory",
         )
 
     def validate_age(self, age):
@@ -131,6 +148,8 @@ class GameSerializer(serializers.ModelSerializer):
 
 class InvitationSerializer(serializers.ModelSerializer):
     sender = serializers.PrimaryKeyRelatedField(read_only=True)
+    game = serializers.PrimaryKeyRelatedField(queryset=Game.objects.all())
+    recipient = serializers.PrimaryKeyRelatedField(queryset=CustomUser.objects.all())
 
     class Meta:
         model = Invitation
@@ -142,6 +161,13 @@ class InvitationSerializer(serializers.ModelSerializer):
         validated_data['sender'] = sender
 
         return super().create(validated_data)
+
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+        representation['sender'] = UserSerializer(instance.sender).data
+        representation['game'] = GameSerializer(instance.game).data
+        representation['recipient'] = UserSerializer(instance.recipient).data
+        return representation
 
 
 class GameUserSerializer(serializers.ModelSerializer):
@@ -176,27 +202,4 @@ class GameSessionSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = GameSession
-        fields = '__all__'
-
-
-class ItemSerializer(serializers.ModelSerializer):
-    character = serializers.IntegerField(
-        source='character.id',
-        read_only=True
-    )
-
-    class Meta:
-        model = Item
-        fields = (
-            'name',
-            'image',
-            'description',
-            'character'
-        )
-
-
-class InvetorySerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = Inventory
         fields = '__all__'

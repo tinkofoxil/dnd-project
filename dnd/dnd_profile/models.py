@@ -121,47 +121,25 @@ class Profile(models.Model):
 
 
 class Item(models.Model):
-    name = models.CharField(
-        max_length=50,
-        verbose_name='Название'
-    )
-    image = models.ImageField(
-        verbose_name='Картинка',
-        help_text='Добавьте картинку',
-        blank=False,
-        null=True,
-    )
-    description = models.TextField(
-        verbose_name='Описание'
-    )
-    character = models.ForeignKey(
-        Profile,
-        on_delete=models.CASCADE,
-        verbose_name='Персонаж'
-    )
+    name = models.CharField(max_length=50, verbose_name='Название')
+    image = models.ImageField(verbose_name='Картинка', help_text='Добавьте картинку', null=True, blank=True)
+    description = models.TextField(verbose_name='Описание')
 
     class Meta:
-        verbose_name = 'Предмет',
+        verbose_name = 'Предмет'
         verbose_name_plural = 'Предметы'
 
     def __str__(self):
-        return f'{self.name} --- {self.character.name}'
+        return self.name
 
 
 class Inventory(models.Model):
-    character = models.ForeignKey(
-        Profile,
-        on_delete=models.CASCADE,
-        verbose_name='Персонаж'
-    )
-    item = models.ManyToManyField(
-        Item,
-        verbose_name='Предмет'
-    )
+    character = models.ForeignKey(Profile, on_delete=models.CASCADE, verbose_name='Персонаж', related_name='inventory')
+    items = models.ManyToManyField(Item, verbose_name='Предметы')
 
     class Meta:
-        verbose_name = 'Инвентарь',
+        verbose_name = 'Инвентарь'
         verbose_name_plural = 'Инвентари'
 
     def __str__(self):
-        return f'Инвентарь {self.character.name}: {", ".join([item.name for item in self.item.all()])}'
+        return f'Инвентарь {self.character.name}'

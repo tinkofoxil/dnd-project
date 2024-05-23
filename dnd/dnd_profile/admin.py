@@ -12,7 +12,7 @@ class InventoryAdmin(admin.ModelAdmin):
 
 
 class ItemAdmin(admin.ModelAdmin):
-    list_display = ('pk', 'name', 'character')
+    list_display = ('pk', 'name',)
 
 
 admin.site.register(Profile, ProfileAdmin)

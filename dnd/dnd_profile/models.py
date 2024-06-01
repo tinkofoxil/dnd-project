@@ -33,84 +33,83 @@ class Profile(models.Model):
         ('Чародей', 'Sorcerer'),
     )
 
-    name = models.CharField(
-        max_length=64,
-        verbose_name='Имя',
-        help_text='Добавьте имя'
+    ALIGNMENT_CHOICES = (
+        ('LG', 'Lawful Good'),
+        ('NG', 'Neutral Good'),
+        ('CG', 'Chaotic Good'),
+        ('LN', 'Lawful Neutral'),
+        ('N', 'Neutral'),
+        ('CN', 'Chaotic Neutral'),
+        ('LE', 'Lawful Evil'),
+        ('NE', 'Neutral Evil'),
+        ('CE', 'Chaotic Evil'),
     )
-    age = models.PositiveSmallIntegerField(
-        verbose_name='Возраст',
-        help_text='Добавьте возраст'
+
+    BACKGROUND_CHOICES = (
+        ('Аколит', 'Acolyte'),
+        ('Шарлатан', 'Charlatan'),
+        ('Преступник', 'Criminal'),
+        ('Артист', 'Entertainer'),
+        ('Народный герой', 'Folk Hero'),
+        ('Артизан гильдии', 'Guild Artisan'),
+        ('Отшельник', 'Hermit'),
+        ('Дворянин', 'Noble'),
+        ('Чужеземец', 'Outlander'),
+        ('Мудрец', 'Sage'),
+        ('Моряк', 'Sailor'),
+        ('Солдат', 'Soldier'),
+        ('Бродяга', 'Urchin'),
     )
-    image = models.ImageField(
-        verbose_name='Картинка',
-        help_text='Добавьте картинку',
-        blank=False,
-        null=True,
-    )
-    race = models.CharField(max_length=50, choices=RACE_CHOICES)
-    class_name = models.CharField(
-        max_length=50,
-        verbose_name='Название класса',
-        choices=CLASS_CHOICES
-    )
-    level = models.IntegerField(
-        verbose_name='Уровень',
-    )
-    proficiency_bonus = models.IntegerField(
-        verbose_name='Бонус владения',
-        default=2,
-    )
-    strength = models.IntegerField(
-        verbose_name='Сила',
-    )
-    dexterity = models.IntegerField(
-        verbose_name='Ловкость'
-    )
-    constitution = models.IntegerField(
-        verbose_name='Телосложение'
-    )
-    intelligence = models.IntegerField(
-        verbose_name='Интелект'
-    )
-    wisdom = models.IntegerField(
-        verbose_name='Мудрость'
-    )
-    charisma = models.IntegerField(
-        verbose_name='Харизма'
-    )
-    strength_modifier = models.IntegerField(
-        verbose_name='Модификатор Силы', default=0
-    )
-    dexterity_modifier = models.IntegerField(
-        verbose_name='Модификатор Ловкости', default=0
-    )
-    constitution_modifier = models.IntegerField(
-        verbose_name='Модификатор Телосложения', default=0
-    )
-    intelligence_modifier = models.IntegerField(
-        verbose_name='Модификатор Интеллекта', default=0
-    )
-    wisdom_modifier = models.IntegerField(
-        verbose_name='Модификатор Мудрости', default=0
-    )
-    charisma_modifier = models.IntegerField(
-        verbose_name='Модификатор Харизмы', default=0
-    )
-    description = models.TextField(
-        verbose_name='Описание'
-    )
-    created_at = models.DateTimeField(
-        auto_now_add=True,
-        verbose_name='Дата создания',
-    )
+
+    name = models.CharField(max_length=64, verbose_name='Имя', help_text='Добавьте имя')
+    age = models.PositiveSmallIntegerField(verbose_name='Возраст', help_text='Добавьте возраст')
+    image = models.ImageField(verbose_name='Картинка', help_text='Добавьте картинку', blank=False, null=True)
+    race = models.CharField(max_length=50, choices=RACE_CHOICES, verbose_name='Раса')
+    class_name = models.CharField(max_length=50, choices=CLASS_CHOICES, verbose_name='Класс')
+    level = models.IntegerField(verbose_name='Уровень')
+    proficiency_bonus = models.IntegerField(verbose_name='Бонус владения', default=2)
+    alignment = models.CharField(max_length=2, choices=ALIGNMENT_CHOICES, verbose_name='Мировоззрение')
+    background = models.CharField(max_length=50, choices=BACKGROUND_CHOICES, verbose_name='Предыстория')
+    
+    # Ability Scores
+    strength = models.IntegerField(verbose_name='Сила')
+    dexterity = models.IntegerField(verbose_name='Ловкость')
+    constitution = models.IntegerField(verbose_name='Телосложение')
+    intelligence = models.IntegerField(verbose_name='Интелект')
+    wisdom = models.IntegerField(verbose_name='Мудрость')
+    charisma = models.IntegerField(verbose_name='Харизма')
+    
+    # Ability Modifiers
+    strength_modifier = models.IntegerField(verbose_name='Модификатор Силы', default=0)
+    dexterity_modifier = models.IntegerField(verbose_name='Модификатор Ловкости', default=0)
+    constitution_modifier = models.IntegerField(verbose_name='Модификатор Телосложения', default=0)
+    intelligence_modifier = models.IntegerField(verbose_name='Модификатор Интеллекта', default=0)
+    wisdom_modifier = models.IntegerField(verbose_name='Модификатор Мудрости', default=0)
+    charisma_modifier = models.IntegerField(verbose_name='Модификатор Харизмы', default=0)
+
+    # Additional fields
+    armor_class = models.IntegerField(verbose_name='Класс брони', default=10)
+    initiative = models.IntegerField(verbose_name='Инициатива', default=0)
+    speed = models.IntegerField(verbose_name='Скорость', default=30)
+    hit_points = models.IntegerField(verbose_name='Очки здоровья', default=10)
+    current_hit_points = models.IntegerField(verbose_name='Текущие очки здоровья', default=10)
+    temporary_hit_points = models.IntegerField(verbose_name='Временные очки здоровья', default=0)
+
+    # Saving Throws and Skills (example with JSONField for simplicity)
+    saving_throws = models.JSONField(verbose_name='Спасброски', default=dict)
+    skills = models.JSONField(verbose_name='Навыки', default=dict)
+    
+    equipment = models.JSONField(verbose_name='Снаряжение', default=dict)
+    traits = models.TextField(verbose_name='Черты характера', blank=True)
+    ideals = models.TextField(verbose_name='Идеалы', blank=True)
+    bonds = models.TextField(verbose_name='Привязанности', blank=True)
+    flaws = models.TextField(verbose_name='Изъяны', blank=True)
+    description = models.TextField(verbose_name='Описание', blank=True)
+    backstory = models.TextField(verbose_name='Предыстория', blank=True)
+    
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name='Дата создания')
     updated_at = models.DateTimeField(auto_now=True)
-    user = models.ForeignKey(
-        CustomUser,
-        on_delete=models.CASCADE,
-        verbose_name='Пользователь',
-        related_name='profiles',
-    )
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, verbose_name='Пользователь', related_name='profiles')
 
     class Meta:
         verbose_name = 'Профиль'

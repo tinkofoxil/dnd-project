@@ -1,5 +1,7 @@
 from django.shortcuts import get_object_or_404
 from django.utils import timezone
+from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework import filters
 from rest_framework import generics, viewsets
 from rest_framework.response import Response
 from rest_framework.decorators import action
@@ -43,10 +45,12 @@ class UploadAvatarAPIView(APIView):
             return Response(serializer.data, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+
 class UserViewSet(viewsets.ModelViewSet):
     queryset = CustomUser.objects.all()
     serializer_class = UserSerializer
     permission_classes = (IsOwnerOrReadOnly,)
+
 
 class ProfileViewSet(viewsets.ModelViewSet):
     """Вьюсет для профиля/анкеты."""
@@ -54,6 +58,9 @@ class ProfileViewSet(viewsets.ModelViewSet):
     queryset = Profile.objects.all()
     serializer_class = ProfileSerializer
     permission_classes = (IsOwnerOrReadOnly,)
+    filter_backends = [DjangoFilterBackend, filters.SearchFilter]
+    filterset_fields = ['user', 'age', 'race', 'class_name']
+    search_fields = ['name']
 
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
@@ -69,6 +76,17 @@ class MyProfilesViewSet(viewsets.ReadOnlyModelViewSet):
     def get_queryset(self):
         user_id = self.kwargs.get('user_id')
         return Profile.objects.filter(user=user_id)
+
+
+class MyInvitationViewSet(viewsets.ReadOnlyModelViewSet):
+
+    queryset = Invitation.objects.all()
+    serializer_class = InvitationSerializer
+    permission_classes = (IsAuthenticatedOrReadOnly, )
+
+    def get_queryset(self):
+        user = self.request.user
+        return Invitation.objects.filter(recipient=user)
 
 
 class FriendsListViewSet(mixins.ListModelMixin,
@@ -114,6 +132,8 @@ class GameViewSet(viewsets.ModelViewSet):
     queryset = Game.objects.all()
     serializer_class = GameSerializer
     permission_classes = [permissions.IsAuthenticated, ]
+    filter_backends = [DjangoFilterBackend, filters.SearchFilter]
+    search_fields = ['name']
 
     @action(detail=True, methods=['post'])
     def start(self, request, pk=None):

@@ -23,6 +23,7 @@ router.register(r'inventories', views.InventoryViewSet)
 router.register(r'games', views.GameViewSet)
 router.register(r'gameusers', views.GameUserViewSet)
 router.register(r'invitations', views.InvitationViewSet)
+router.register(r'myinvitations', views.MyInvitationViewSet)
 router.register(r'gamessessions', views.GameSessionViewSet)
 
 schema_view = get_schema_view(

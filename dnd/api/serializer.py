@@ -63,6 +63,9 @@ class ProfileSerializer(serializers.ModelSerializer):
             "race",
             "class_name",
             "level",
+            "proficiency_bonus",
+            "alignment",
+            "background",
             "strength",
             "dexterity",
             "constitution",
@@ -75,51 +78,56 @@ class ProfileSerializer(serializers.ModelSerializer):
             "intelligence_modifier",
             "wisdom_modifier",
             "charisma_modifier",
+            "armor_class",
+            "initiative",
+            "speed",
+            "hit_points",
+            "current_hit_points",
+            "temporary_hit_points",
+            "saving_throws",
+            "skills",
+            "equipment",
+            "traits",
+            "ideals",
+            "bonds",
+            "flaws",
             "description",
+            "backstory",
             "user",
             "user_id",
             "inventory",
+            "created_at",
+            "updated_at",
         )
 
     def validate_age(self, age):
         if age <= 0:
-            raise serializers.ValidationError(
-                'Возраст должен быть больше нуля'
-            )
+            raise serializers.ValidationError('Возраст должен быть больше нуля')
         return age
 
     def validate_level(self, level):
         if level < 0:
-            raise serializers.ValidationError(
-                'Уровень не может быть отрицательным'
-            )
+            raise serializers.ValidationError('Уровень не может быть отрицательным')
         return level
 
     def create(self, validated_data):
-        strength = validated_data.get('strength')
-        dexterity = validated_data.get('dexterity')
-        constitution = validated_data.get('constitution')
-        intelligence = validated_data.get('intelligence')
-        wisdom = validated_data.get('wisdom')
-        charisma = validated_data.get('charisma')
-
-        validated_data['strength_modifier'] = self.get_ability_modifier(strength)
-        validated_data['dexterity_modifier'] = self.get_ability_modifier(dexterity)
-        validated_data['constitution_modifier'] = self.get_ability_modifier(constitution)
-        validated_data['intelligence_modifier'] = self.get_ability_modifier(intelligence)
-        validated_data['wisdom_modifier'] = self.get_ability_modifier(wisdom)
-        validated_data['charisma_modifier'] = self.get_ability_modifier(charisma)
-
+        validated_data = self.calculate_attributes(validated_data)
         return super().create(validated_data)
 
     def update(self, instance, validated_data):
-        strength = validated_data.get('strength', instance.strength)
-        dexterity = validated_data.get('dexterity', instance.dexterity)
-        constitution = validated_data.get('constitution', instance.constitution)
-        intelligence = validated_data.get('intelligence', instance.intelligence)
-        wisdom = validated_data.get('wisdom', instance.wisdom)
-        charisma = validated_data.get('charisma', instance.charisma)
+        validated_data = self.calculate_attributes(validated_data, instance)
+        return super().update(instance, validated_data)
 
+    def calculate_attributes(self, validated_data, instance=None):
+        strength = validated_data.get('strength', instance.strength if instance else None)
+        dexterity = validated_data.get('dexterity', instance.dexterity if instance else None)
+        constitution = validated_data.get('constitution', instance.constitution if instance else None)
+        intelligence = validated_data.get('intelligence', instance.intelligence if instance else None)
+        wisdom = validated_data.get('wisdom', instance.wisdom if instance else None)
+        charisma = validated_data.get('charisma', instance.charisma if instance else None)
+        level = validated_data.get('level', instance.level if instance else None)
+
+        # Calculate modifiers
         validated_data['strength_modifier'] = self.get_ability_modifier(strength)
         validated_data['dexterity_modifier'] = self.get_ability_modifier(dexterity)
         validated_data['constitution_modifier'] = self.get_ability_modifier(constitution)
@@ -127,10 +135,45 @@ class ProfileSerializer(serializers.ModelSerializer):
         validated_data['wisdom_modifier'] = self.get_ability_modifier(wisdom)
         validated_data['charisma_modifier'] = self.get_ability_modifier(charisma)
 
-        return super().update(instance, validated_data)
+        # Calculate proficiency bonus
+        validated_data['proficiency_bonus'] = self.get_proficiency_bonus(level)
+
+        # Calculate armor class (example: 10 + dexterity modifier)
+        validated_data['armor_class'] = 10 + validated_data['dexterity_modifier']
+
+        # Calculate initiative (dexterity modifier)
+        validated_data['initiative'] = validated_data['dexterity_modifier']
+
+        # Calculate speed (default to 30, could be adjusted based on race or class)
+        validated_data['speed'] = 30
+
+        # Calculate hit points (example: level * (constitution modifier + 10))
+        validated_data['hit_points'] = level * (10 + validated_data['constitution_modifier'])
+        validated_data['current_hit_points'] = validated_data['hit_points']
+        validated_data['temporary_hit_points'] = 0
+
+        # Initialize saving throws and skills as empty or with default values
+        validated_data['saving_throws'] = {}
+        validated_data['skills'] = {}
+
+        return validated_data
 
     def get_ability_modifier(self, ability_score):
-        return (ability_score - 10) // 2
+        if ability_score is not None:
+            return (ability_score - 10) // 2
+        return 0
+
+    def get_proficiency_bonus(self, level):
+        if level < 5:
+            return 2
+        elif level < 9:
+            return 3
+        elif level < 13:
+            return 4
+        elif level < 17:
+            return 5
+        else:
+            return 6
 
 
 class GameSerializer(serializers.ModelSerializer):
